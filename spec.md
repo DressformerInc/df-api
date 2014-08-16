@@ -1,4 +1,4 @@
-### api.dressformer.com
+## api.dressformer.com
 
 #### `/v2/garments`
 __Methods:__ 
@@ -108,7 +108,7 @@ __Result:__ Object
 ```
 
 
-### assets.dressformer.com
+## assets.dressformer.com
 
 #### `/model`
 __Methods:__
