@@ -47,7 +47,7 @@ GET /v2/garments?ids=93e92e72-1bdb-436f-bdb9-52dba6c16176
 		"color" : "", // @todo
 		
 		"assets" : {
-			"model" : "assets.dressformer.com/models/43a5dbed-4abb-452a-8f82-9a86e555930b" // Garment model, by default in obj format
+			"model" : "assets.dressformer.com/model/43a5dbed-4abb-452a-8f82-9a86e555930b" // Garment model, by default in obj format
 			"diffuse" : "assets.dressformer.com/53b54559fcb05d3238000002" // Diffuse map
 			"normal"  : "assets.dressformer.com/53b61050eff01c1008000001" // Normal map
 		}
