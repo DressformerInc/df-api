@@ -4,15 +4,12 @@
 __Methods:__ 
 
 - GET
-- POST
-- PUT
-- DELETE
 
 __Parameters:__
 
 - `ids` coma-separated list of ids  
 
-__Result:__ Array of objects
+__Result:__ Array of garment objects
 
 e.g.:
 
@@ -20,10 +17,21 @@ e.g.:
 GET /v2/garments?ids=93e92e72-1bdb-436f-bdb9-52dba6c16176
 
 [
-	{},
+	{ 
+		/* Garment Object */ 
+	},
 ]
 
 ```
+
+#### `/v2/garment/:id`
+__Methods:__ 
+
+- GET
+- POST
+- PUT
+- DELETE
+
 
 #####  Garment Model
 
@@ -106,7 +114,6 @@ __Result:__ Object
 	}
 }
 ```
-
 
 ## assets.dressformer.com
 
