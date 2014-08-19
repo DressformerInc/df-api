@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/3d0c/martini-contrib/config"
 	"github.com/go-martini/martini"
+	"github.com/martini-contrib/binding"
 	"github.com/martini-contrib/encoder"
 	"log"
 	"net/http"
@@ -60,10 +61,17 @@ func main() {
 		(*ctrl.User).Find,
 	)
 
-	route.Get("/post",
+	route.Get("/garments",
+		binding.Bind(models.URLOptionsScheme{}),
 		construct(&models.User{}),
-		construct(&ctrl.Post{}),
-		(*ctrl.Post).Find,
+		construct(&ctrl.Garment{}),
+		(*ctrl.Garment).FindAll,
+	)
+
+	route.Get("/garment",
+		construct(&models.User{}),
+		construct(&ctrl.Garment{}),
+		(*ctrl.Garment).Find,
 	)
 
 	m.Action(route.Handle)

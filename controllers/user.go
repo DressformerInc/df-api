@@ -7,10 +7,6 @@ import (
 	"net/http"
 )
 
-type Controller interface {
-	Construct(arg ...interface{}) interface{}
-}
-
 type User struct {
 }
 

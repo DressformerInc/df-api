@@ -4,5 +4,14 @@
         "https_on"  : ":5443",
         "ssl_cert"  : "./cert.pem",
         "ssl_key"   : "./key.pem"
+    },
+
+    "connections"   : {
+    	"rethink" : {
+            "spec"    : "localhost:28015",
+            "db_name" : "dressformer",
+            "default" : true,
+            "type"    : "rethinkdb"
+        }
     }
 }
