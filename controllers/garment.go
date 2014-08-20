@@ -14,11 +14,9 @@ type Garment struct {
 }
 
 func (*Garment) Construct(args ...interface{}) interface{} {
-	this := &Garment{
+	return &Garment{
 		model: (*models.Garment).Construct(nil).(*models.Garment),
 	}
-
-	return this
 }
 
 func (this *Garment) Find(u *models.User, enc encoder.Encoder) (int, []byte) {
@@ -30,7 +28,6 @@ func (this *Garment) FindAll(opts models.URLOptionsScheme, u *models.User, enc e
 	ids := make([]interface{}, 0)
 
 	for _, id := range strings.Split(opts.Ids, ",") {
-		// validate uuid here
 		if !guid.MatchString(id) {
 			ids = append(ids, id)
 		} else {
@@ -38,9 +35,23 @@ func (this *Garment) FindAll(opts models.URLOptionsScheme, u *models.User, enc e
 		}
 	}
 
-	if result := this.model.FindAll(ids); result != nil {
-		return http.StatusOK, encoder.Must(enc.Encode(result))
+	// if result := model.FindAll(ids); result != nil {
+	// 	return http.StatusOK, encoder.Must(enc.Encode(result))
+	// }
+
+	result := this.model.FindAll(ids)
+
+	return http.StatusOK, encoder.Must(enc.Encode(result))
+
+	// return http.StatusNotFound, []byte{}
+}
+
+func (this *Garment) Create(u *models.User, payload models.GarmentScheme, enc encoder.Encoder) (int, []byte) {
+
+	result, err := this.model.Create(payload)
+	if err != nil {
+		return http.StatusBadRequest, []byte{}
 	}
 
-	return http.StatusNotFound, []byte{}
+	return http.StatusOK, encoder.Must(enc.Encode(result))
 }
