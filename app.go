@@ -5,10 +5,9 @@ import (
 	"df/api/models"
 	. "df/api/utils"
 	"fmt"
+	"github.com/3d0c/binding"
 	"github.com/3d0c/martini-contrib/config"
 	"github.com/go-martini/martini"
-	// "github.com/martini-contrib/binding"
-	"github.com/3d0c/martini-contrib/binding"
 	"github.com/martini-contrib/encoder"
 	"log"
 	"net/http"
@@ -19,16 +18,6 @@ func init() {
 
 	config.Init("./config.json")
 	config.LoadInto(AppConfig)
-}
-
-func some(a int) martini.Handler {
-	return func(ctx martini.Context, req *http.Request) {
-		ctx.Map(a)
-	}
-}
-
-func foo(i int) string {
-	return fmt.Sprintln(i)
 }
 
 func main() {

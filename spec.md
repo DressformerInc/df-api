@@ -1,6 +1,6 @@
 ## api.dressformer.com
 
-#### `/v2/garments`
+### /garments
 __Methods:__ 
 
 - GET
@@ -24,7 +24,7 @@ GET /v2/garments?ids=93e92e72-1bdb-436f-bdb9-52dba6c16176
 
 ```
 
-#### `/v2/garment/:id`
+### /garment/:id
 __Methods:__ 
 
 - GET
@@ -62,7 +62,7 @@ __Methods:__
 		
 		"assets" : {
 			// Garment model, by default in obj format
-			"model" : "assets.dressformer.com/model/43a5dbed-4abb-452a-8f82-9a86e555930b" 
+			"geometry" : "assets.dressformer.com/model/53b54559fcb05d3238000012" // Base model
 			"diffuse" : "assets.dressformer.com/53b54559fcb05d3238000002" // Diffuse map
 			"normal"  : "assets.dressformer.com/53b61050eff01c1008000001" // Normal map
 		}
@@ -102,7 +102,7 @@ __Methods:__
 ]
 ```
 
-#### `/v2/user`
+### /user
 __Methods:__ 
 
 - GET
@@ -121,7 +121,7 @@ __Result:__ Object
 	// Not authorized, guest user
 
 	"avatar" : {
-		"model" : "assets.dressformer.com/model/53d11d10fcb05d8ed2000042" // Some base mannequin
+		"model" : "assets.dressformer.com/geometry/53d11d10fcb05d8ed2000042" // Some base mannequin
 	},
 	
 	"body" : {
@@ -136,7 +136,56 @@ __Result:__ Object
 
 ## assets.dressformer.com
 
-#### `/model`
+### /
+_Upload files to asset._
+  
+__Methods:__
+
+- POST
+
+__Expected data:__
+
+- MultiPart Form Data
+
+__Example:__   
+Following `curl` command
+
+```sh
+curl -i -XPOST -H "ContentType:multipart/form-data"     \
+	-F name=Base.obj      -F filedata=@Base.obj         \
+	-F name=Chest_max.obj -F filedata=@Chest_max.obj    \
+http://assets.dressformer.com/
+```
+returns
+
+```json
+HTTP/1.1 100 Continue
+
+HTTP/1.1 200 OK
+Access-Control-Allow-Headers: Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token
+Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE
+Access-Control-Allow-Origin: *
+Cache-Control: max-age=2592000
+Cache-Control: public
+Content-Type: application/json
+Pragma: public
+Date: Thu, 21 Aug 2014 16:48:43 GMT
+Content-Length: 120
+
+[
+	{
+		"id"        : "53f622eb0000000000000001",
+		"orig_name" : "Base.obj"
+	},
+	{
+		"id"        : "53f622eb0000000000000002",
+		"orig_name" : "Chest_max.obj"
+	}
+]	
+```
+
+
+### /geometry/:id
 __Methods:__
 
 - GET
@@ -157,19 +206,13 @@ __Parameters:__
 
 E.g.:
 
-Gets mannequin morphed to waist 90.0
+Gets geometry morphed to waist 90.0
 
 ```sh
-GET assets.dressformer.com/model/53d11d10fcb05d8ed2000042?waist=90.0
+GET assets.dressformer.com/geometry/53d11d10fcb05d8ed2000042?waist=90.0
 ```
 
-Gets garment with id `43a5dbed-4abb-452a-8f82-9a86e555930b` morphed to waist 90
-
-```sh
-GET assets.dressformer.com/model/43a5dbed-4abb-452a-8f82-9a86e555930b?waist=90.0
-```
-
-#### `/:id` 
+### /image/:id
 	
 __Methods:__
 

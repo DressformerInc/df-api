@@ -10,7 +10,7 @@ import (
 
 type Source struct {
 	Id     string  `gorethink:"id" json:"id"`
-	Weight float32 `gorethink:"id" json:"id"`
+	Weight float32 `gorethink:"id" json:"weight"`
 }
 
 type Size struct {
@@ -28,7 +28,7 @@ type GarmentScheme struct {
 		Geometry string `gorethink:"geometry" json:"geometry"`
 		Diffuse  string `gorethink:"diffuse"  json:"diffuse"`
 		Normal   string `gorethink:"normal"   json:"normal"`
-	}
+	} `gorethink:"assets" json:"assets"`
 
 	Sources [][]Source `gorethink:"sources" json:"sources,omitempty"`
 }
