@@ -159,19 +159,6 @@ http://assets.dressformer.com/
 returns
 
 ```json
-HTTP/1.1 100 Continue
-
-HTTP/1.1 200 OK
-Access-Control-Allow-Headers: Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token
-Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE
-Access-Control-Allow-Origin: *
-Cache-Control: max-age=2592000
-Cache-Control: public
-Content-Type: application/json
-Pragma: public
-Date: Thu, 21 Aug 2014 16:48:43 GMT
-Content-Length: 120
-
 [
 	{
 		"id"        : "53f622eb0000000000000001",
