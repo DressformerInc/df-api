@@ -35,15 +35,11 @@ func (this *Garment) FindAll(opts models.URLOptionsScheme, u *models.User, enc e
 		}
 	}
 
-	// if result := model.FindAll(ids); result != nil {
-	// 	return http.StatusOK, encoder.Must(enc.Encode(result))
-	// }
+	if result := this.model.FindAll(ids); result != nil {
+		return http.StatusOK, encoder.Must(enc.Encode(result))
+	}
 
-	result := this.model.FindAll(ids)
-
-	return http.StatusOK, encoder.Must(enc.Encode(result))
-
-	// return http.StatusNotFound, []byte{}
+	return http.StatusNotFound, []byte{}
 }
 
 func (this *Garment) Create(u *models.User, payload models.GarmentScheme, enc encoder.Encoder) (int, []byte) {

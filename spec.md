@@ -44,38 +44,57 @@ __Methods:__
 		
 		"name"  : "Some name",
 		
-		"size"  : "M", // (String) Any size representation as a string, e.g. 
+		"size_name"  : "M", // (String) Any size representation as a string, e.g. 
 		               // "XL", "42", etc..., 
 
 		"sizes" : [   // (Array of Objects)
-			{"S" : "43a5dbed-4abb-452a-8f82-9a86e555930b"}, // name of size : garment id
-			{"X" : "33a6dbed-4abb-452a-8f82-1a16e666930x"}  
+			{
+				"id"        : "43a5dbed-4abb-452a-8f82-9a86e555930b",
+				"size_name" : "S"
+			},
+			{
+				"id"        : "33a6dbed-4abb-452a-8f82-1a16e666930a",
+				"size_name" : "X"
+			}  
 		],
 
 		"color" : "", // @todo
 		
 		"assets" : {
-			"model" : "assets.dressformer.com/model/43a5dbed-4abb-452a-8f82-9a86e555930b" // Garment model, by default in obj format
+			// Garment model, by default in obj format
+			"model" : "assets.dressformer.com/model/43a5dbed-4abb-452a-8f82-9a86e555930b" 
 			"diffuse" : "assets.dressformer.com/53b54559fcb05d3238000002" // Diffuse map
 			"normal"  : "assets.dressformer.com/53b61050eff01c1008000001" // Normal map
 		}
 		
 		// Private fields (available for admin-user)
 		
-		"sources" : { // Array of arrays of objects. Object is a morph-target - weight pair.
-			[
+		"sources" : { // Array of array of objects. Object is a morph-target - weight pair.
+			[	
 				[
-					{"53d11d10fcb05d8ed2000001"  : 83.0}, // id of morph-target : weight
-					{"53d11d10fcb05d8ed2000002"  : 110.0}
-					{"53d11d10fcb05d8ed2000003"  : 105.0}
+					{ 
+						"id" : "53d11d10fcb05d8ed2000001",
+						"weight" : 83.0
+					},
+					{ 
+						"id" : "53d11d10fcb05d8ed2000002",
+						"weight" : 113.0
+					},					
+					
 				],
 				[
-					{"53d11d10fcb05d8ed2000011" : 190.0}, 
-					{"53d11d10fcb05d8ed2000022" : 155.0}
-				],
-				[
-					{"53d11d10fcb05d8ed2000031" : 90.0}, 
-					{"53d11d10fcb05d8ed2000042" : 60.0}
+					{
+						"id" : "53d11d10fcb05d8ed2000001",  
+						"weight" : 83.0
+					},
+					{
+						"id" : "53d11d10fcb05d8ed2000002",
+						"weight"  : 110.0
+					},
+					{
+						"id" : "53d11d10fcb05d8ed2000003",
+						"weight"  : 105.0
+					}
 				]
 			]
 		}

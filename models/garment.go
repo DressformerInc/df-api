@@ -8,13 +8,21 @@ import (
 	"net/http"
 )
 
-type Pair map[string]interface{}
+type Source struct {
+	Id     string  `gorethink:"id" json:"id"`
+	Weight float32 `gorethink:"id" json:"id"`
+}
+
+type Size struct {
+	Id       string `gorethink:"id"        json:"id"`
+	SizeName string `gorethink:"size_name" json:"size_name"`
+}
 
 type GarmentScheme struct {
 	Id       string `gorethink:"id,omitempty" json:"id"   binding:"-"`
 	Name     string `gorethink:"name"         json:"name"`
-	SizeName string `gorethink:"size"         json:"size"`
-	Sizes    []Pair `gorethink:"sizes"        json:"sizes"`
+	SizeName string `gorethink:"size_name"    json:"size"`
+	Sizes    []Size `gorethink:"sizes"        json:"sizes"`
 
 	Assets struct {
 		Geometry string `gorethink:"geometry" json:"geometry"`
@@ -22,10 +30,11 @@ type GarmentScheme struct {
 		Normal   string `gorethink:"normal"   json:"normal"`
 	}
 
-	Sources [][]Pair `gorethink:"sources" json:"sources, omitempty"`
+	Sources [][]Source `gorethink:"sources" json:"sources,omitempty"`
 }
 
 func (this GarmentScheme) Validate(errors *binding.Errors, req *http.Request) {
+
 	// E.g.:
 	// if len(this.Title) == 0 {
 	// 	errors.Fields["title"] = "Title can't be empty."
@@ -35,9 +44,7 @@ func (this GarmentScheme) Validate(errors *binding.Errors, req *http.Request) {
 type Garment struct{}
 
 func (*Garment) Construct(args ...interface{}) interface{} {
-	this := &Garment{}
-	log.Println("garment model:", this)
-	return this
+	return &Garment{}
 }
 
 func (this *Garment) FindAll(ids interface{}) []GarmentScheme {
@@ -70,7 +77,7 @@ func (this *Garment) Create(payload GarmentScheme) (*GarmentScheme, error) {
 		return nil, errors.New("Internal server error")
 	}
 
-	log.Println("inserted:", response.Inserted)
+	log.Println("inserted :", response.Inserted)
 	log.Println("new_val:", response.NewValue)
 
 	return response.NewValue.(*GarmentScheme), nil
