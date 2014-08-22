@@ -61,10 +61,13 @@ __Methods:__
 		"color" : "", // @todo
 		
 		"assets" : {
-			// Garment model, by default in obj format
-			"geometry" : "assets.dressformer.com/model/53b54559fcb05d3238000012" // Base model
-			"diffuse" : "assets.dressformer.com/53b54559fcb05d3238000002" // Diffuse map
-			"normal"  : "assets.dressformer.com/53b61050eff01c1008000001" // Normal map
+			"host"     : "assets.dressformer.com"
+			"geometry" : "53b54559fcb05d3238000012"  // Garment base model
+			                                         // assets link: {host}/geometry/{geometry}
+			"diffuse"  : "53b54559fcb05d3238000002"  // Diffuse map
+			                                         // assets link: {host}/image/{diffuse}
+			"normal"   : "53b61050eff01c1008000001"  // Normal map
+			                                         // assets link: {host}/image/{normal}
 		}
 		
 		// Private fields (available for admin-user)
@@ -220,7 +223,7 @@ __Parameters:__
   	+ `640`  maximum dimension is 640px, e.g. original 1024x768 pixel image will be scaled to 640x480,
            same option applied for 900x1600 image results 360x640
   	+ `0.5`  50% of original dimensions, e.g. 1024x768 = 512x384
-- `quality` 0-100 image quality
+- `q` 0-100 image quality
 - `format` Image format — `png` or `jpg`. Jpeg is default one.
 
 	
