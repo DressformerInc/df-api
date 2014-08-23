@@ -238,7 +238,7 @@ curl -o test.jpg "http://assets.dressformer.com/image/53f735c10000000000000001?q
 Get an image resized to 500x500px (original 2048x2048 becames 500x500) with 50% quality
 
 ```sh
-curl -o test.jpg "http://assets.dressformer.com/image/53f735c10000000000000001?q=50&scale=500"
+curl -o test.jpg "http://assets.dressformer.com/image/53f735c10000000000000001?q=50&scale=x500"
 ```
 
 ### More examples
