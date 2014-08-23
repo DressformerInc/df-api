@@ -180,17 +180,19 @@ __Parameters:__
 Geometry object structure:
 
 ```json
+{
 	"id"            : "22a6dbed-1aab-452b-8f81-2a16e994120b",
 	"base"          : "53f879c40000000000000002",
 	"morph_targets" : [
 		{
-			"section" : "chest"
+			"section" : "chest",
 			"sources" : [
 				{"id" : "53f879c40000000000000002", "weight" : 116.4},
 				{"id" : "53f879c40000000000000003", "weight" : 130.0},
 				{"id" : "53f879c40000000000000004", "weight" : 80.0}
 			]
 		}
+}
 ```
 Supported sections: `chest` `waist` `hips` `height` `underbust`  
 
