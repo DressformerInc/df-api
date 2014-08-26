@@ -2,10 +2,9 @@ package models
 
 import (
 	"errors"
+	"github.com/3d0c/oid"
 	r "github.com/dancannon/gorethink"
-	"github.com/martini-contrib/binding"
 	"log"
-	"net/http"
 )
 
 type Source struct {
@@ -33,22 +32,57 @@ type GarmentScheme struct {
 	Sources [][]Source `gorethink:"sources" json:"sources,omitempty"`
 }
 
-func (this GarmentScheme) Validate(errors *binding.Errors, req *http.Request) {
-
-	// E.g.:
-	// if len(this.Title) == 0 {
-	// 	errors.Fields["title"] = "Title can't be empty."
-	// }
+type Garment struct {
+	r.Term
 }
-
-type Garment struct{}
 
 func (*Garment) Construct(args ...interface{}) interface{} {
-	return &Garment{}
+	return &Garment{
+		r.Db("dressformer"),
+	}
 }
 
-func (this *Garment) FindAll(ids interface{}) []GarmentScheme {
-	rows, err := r.Table("garments").GetAll(r.Args(ids)).Run(session())
+func (this *Garment) Find(id interface{}) *GarmentScheme {
+	var query r.Term
+
+	switch t := id.(type) {
+	case oid.ObjectId:
+		query = r.Table("garments").GetAllByIndex("assetsGeometry", id.(oid.ObjectId).String())
+
+	default:
+		log.Println("Unexpected type:", t)
+		return nil
+	}
+
+	rows, err := query.Run(session())
+	if err != nil {
+		log.Println("Unable to fetch cursor for id:", id, "Error:", err)
+		return nil
+	}
+
+	var result *GarmentScheme
+
+	if err = rows.One(&result); err != nil {
+		log.Println("Unable to get data, err:", err)
+		return nil
+	}
+
+	return result
+}
+
+func (this *Garment) FindAll(ids []string, opts URLOptionsScheme) []GarmentScheme {
+	query := this.Table("garments")
+
+	log.Println("len:", len(ids))
+	if len(ids[0]) > 0 {
+		log.Println("!empty, ", len(ids), ",:", ids)
+		query = query.GetAll(r.Args(ids))
+	} else {
+		query.Skip(opts.Skip).Limit(50)
+	}
+
+	rows, err := query.Run(session())
+
 	if err != nil {
 		log.Println("Unable to fetch cursor for args:", ids, "Error:", err)
 		return nil

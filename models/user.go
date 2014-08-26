@@ -1,9 +1,7 @@
 package models
 
 type UserScheme struct {
-	Avatar struct {
-		Model string `gorethink:"model" json:"model"`
-	} `gorethink:"avatar,omitempty" json:"avatar, omitempty"`
+	Dummy string `gorethink:"dummy" json:"dummy"`
 
 	Body struct {
 		Height    float32 `gorethink:"height"    json:"height"`
@@ -11,7 +9,7 @@ type UserScheme struct {
 		Underbust float32 `gorethink:"underbust" json:"underbust"`
 		Waist     float32 `gorethink:"waist"     json:"waist"`
 		Hips      float32 `gorethink:"hips"      json:"hips"`
-	} `gorethink:"body,omitempty" json:"body, omitempty"`
+	} `gorethink:"body,omitempty" json:"body,omitempty"`
 }
 
 type User struct {
@@ -29,12 +27,6 @@ func (*User) Construct(args ...interface{}) interface{} {
 func guest() *UserScheme {
 	user := &UserScheme{}
 
-	user.Avatar.Model = "//assets.dressformer.com/model/53d11d10fcb05d8ed2000042"
-	user.Body.Chest = 90
-	user.Body.Height = 170
-	user.Body.Hips = 90
-	user.Body.Underbust = 70
-	user.Body.Waist = 60
-
+	user.Dummy = "//assets.dressformer.com/model/"
 	return user
 }

@@ -1,4 +1,4 @@
-## api.dressformer.com
+## Base API
 
 ### /garments
 __Methods:__ 
@@ -27,10 +27,7 @@ GET /v2/garments?ids=93e92e72-1bdb-436f-bdb9-52dba6c16176
 ### /garment/:id
 __Methods:__ 
 
-- GET
-- POST
-- PUT
-- DELETE
+- GET, POST, PUT, DELETE
 
 
 #####  Garment Model
@@ -74,9 +71,7 @@ __Methods:__
 ### /user
 __Methods:__ 
 
-- GET
-- POST
-- PUT
+- GET, POST, PUT
 
 __Parameters:__
 
@@ -85,25 +80,41 @@ __Result:__ Object
 
 ##### User Model
 
+Guest user model
+
 ```javascript
 {
-	// Not authorized, guest user with default settings
+	// default manequin
+	"dummy" : "assets.dressformer.com/geometry/22a6dbed-1aab-452b-8f81-2a16e994120b"
+}
 
-	"avatar" : {
-		"model" : "assets.dressformer.com/geometry/22a6dbed-1aab-452b-8f81-2a16e994120b" // Some base mannequin
-	},
-	
+```
+
+Authorized user contains body settings
+
+```javascript
+{
+	// base dummy
+	"dummy" : "assets.dressformer.com/geometry/22a6dbed-1aab-452b-8f81-2a16e994120b"
+
+	// Body object contains only those parameters, which are different from the base one.	
 	"body" : {
-		"height"    : 170.0,
-		"chest"     : 90.0,
-		"underbust" : 70.0,
-		"waist"     : 60.0,
-		"hips"      : 90.0
+		"height"    : 174.0,
+		"chest"     : 95.0,
+		"underbust" : 72.0,
+		"waist"     : 61.5,
+		"hips"      : 89.0
 	}
 }
 ```
 
-## assets.dressformer.com
+To get morphed mannequin, we should add all users body parameters to the dummy link, e.g.:
+
+```
+GET assets.dressformer.com/geometry/22a6dbed-1aab-452b-8f81-2a16e994120b?height=174.0&chest=95.0&underbust=72.0&waist=61.5&hips=89.0
+```
+
+## File API
 
 ### /
 _Upload files to asset._
@@ -248,22 +259,20 @@ curl -o test.jpg "http://assets.dressformer.com/image/53f735c10000000000000001?q
 Upload all files to asset.
 
 ```sh
-curl                                                                                       \
-	-i -XPOST -H "ContentType:multipart/form-data"                                         \
-	-F name=base.obj             -F filedata=@base.obj                                     \
-	-F name=chest_1164.obj       -F filedata=@chest_1164.obj                               \
-	-F name=chest_1300.obj       -F filedata=@chest_1300.obj                               \
-	-F name=chest_800.obj        -F filedata=@chest_800.obj                                \
-	-F name=height_1550.obj      -F filedata=@height_1550.obj                              \
-	-F name=height_1900.obj      -F filedata=@height_1900.obj                              \
-	-F name=hips_1100.obj        -F filedata=@hips_1100.obj                                \
-	-F name=hips_1248.obj        -F filedata=@hips_1248.obj                                \
-	-F name=hips_840.obj         -F filedata=@hips_840.obj                                 \
-	-F name=underchest_730.obj   -F filedata=@underchest_730.obj                           \
-	-F name=underchest_780.obj   -F filedata=@underchest_780.obj                           \
-	-F name=waist_586.obj        -F filedata=@waist_586.obj                                \
-	-F name=waist_900.obj        -F filedata=@waist_900.obj                                \
-http://assets.dressformer.com 
+curl \
+    -i -XPOST -H "ContentType:multipart/form-data" \
+    -F name=447_base.obj -F filedata=@447_base.obj \
+    -F name=447_chest_max.obj       -F filedata=@447_chest_max.obj \
+    -F name=447_chest_min.obj       -F filedata=@447_chest_min.obj \
+    -F name=447_height_max.obj      -F filedata=@447_height_max.obj \
+    -F name=447_height_min.obj      -F filedata=@447_height_min.obj \
+    -F name=447_hips_max.obj        -F filedata=@447_hips_max.obj \
+    -F name=447_hips_min.obj        -F filedata=@447_hips_min.obj \
+    -F name=447_underchest_max.obj  -F filedata=@447_underchest_max.obj \
+    -F name=447_underchest_min.obj  -F filedata=@447_underchest_min.obj \
+    -F name=447_waist_max.obj       -F filedata=@447_waist_max.obj \
+    -F name=447_waist_min.obj       -F filedata=@447_waist_min.obj \
+http://webgl.dressformer.com/assets/
 ```
 
 Result:
@@ -271,90 +280,104 @@ Result:
 ```json
 [
     {
-        "id": "53f879c40000000000000001",
-        "orig_name": "base.obj"
+        "id": "53fcc20d0000000000000001",
+        "orig_name": "447_base.obj"
     },
     {
-        "id": "53f879c40000000000000002",
-        "orig_name": "chest_1164.obj"
+        "id": "53fcc20d0000000000000002",
+        "orig_name": "447_chest_max.obj"
     },
     
-				... cutted ...
+						...
 ]
 ```
 
 Create geometry object for uploaded files.
 
 ```sh
-curl -X POST -H 'Content-Type:application/json' -d '
+curl -XPOST -H 'Content-Type:application/json' -d '
 {
-	"base" : "53f879c40000000000000001",
-	"morph_targets" : [
-		{
-			"section" : "chest",
-			"sources" : [
-				{"id" : "53f879c40000000000000002", "weight" : 116.4},
-				{"id" : "53f879c40000000000000003", "weight" : 130.0},
-				{"id" : "53f879c40000000000000004", "weight" : 80.0}
-			]
-		},
-		{
-			"section" : "height",
-			"sources" : [
-				{"id" : "53f879c40000000000000005", "weight" : 155.0},
-				{"id" : "53f879c40000000000000006", "weight" : 190.0}
-			]
-		},
-		{
-			"section" : "hips",
-			"sources" : [
-				{"id" : "53f879c40000000000000007", "weight" : 110.0},
-				{"id" : "53f879c40000000000000008", "weight" : 124.8},
-				{"id" : "53f879c40000000000000009", "weight" : 84.0}
-			]
-		},
-		{
-			"section" : "underbust",
-			"sources" : [
-				{"id" : "53f879c4000000000000000a", "weight" : 73.0},
-				{"id" : "53f879c4000000000000000b", "weight" : 78.0}
-			]
-		},
-		{
-			"section" : "waist",
-			"sources" : [
-				{"id" : "53f879c4000000000000000c", "weight" : 58.6},
-				{"id" : "53f879c4000000000000000d", "weight" : 90.0}
-			]
-		}
-	]
-}' http://assets.dressformer.com/geometry
+    "base" : "53fcc20d0000000000000001",
+    "name" : "Base dummy",
+    "morph_targets" : [
+        {
+            "section" : "height",
+            "sources" : [
+                {"id" : "53fcc20d0000000000000004", "weight" : 190.0},
+                {"id" : "53fcc20d0000000000000005", "weight" : 155.0}
+            ]
+        },
+        {
+            "section" : "chest",
+            "sources" : [
+                {"id" : "53fcc20d0000000000000002", "weight" : 130.0},
+                {"id" : "53fcc20d0000000000000003", "weight" : 80.0}
+            ]
+        },
+        {
+            "section" : "underbust",
+            "sources" : [
+                {"id" : "53fcc20d0000000000000008", "weight" : 130.0},
+                {"id" : "53fcc20d0000000000000009", "weight" : 80.0}
+            ]
+        },
+        {
+            "section" : "waist",
+            "sources" : [
+                {"id" : "53fcc20d000000000000000a", "weight" : 90.0},
+                {"id" : "53fcc20d000000000000000b", "weight" : 60.0}
+            ]
+        },
+        {
+            "section" : "hips",
+            "sources" : [
+                {"id" : "53fcc20d0000000000000006", "weight" : 110.0},
+                {"id" : "53fcc20d0000000000000007", "weight" : 84.0}
+            ]
+        }
+    ]
+}' http://webgl.dressformer.com/assets/geometry
 ```
 
 Result:
 
 ```json
 {
-    "id"   : "d537757e-9b95-42d0-8d44-b769b4ece0b4",  
-    "base" : "53f879c40000000000000001",
+    "id": "e488c579-af46-45d3-8647-af5279dc1f86",
+    "base": "53fcc20d0000000000000001",
     "morph_targets": [
         {
-            "section" : "chest",
-            "sources" : [
+            "section": "height",
+            "sources": [
                 {
-                    "id"     : "53f879c40000000000000002",
-                    "weight" : 116.4
+                    "id": "53fcc20d0000000000000004",
+                    "weight": 190
                 },
                 {
-                    "id"     : "53f879c40000000000000003",
-                    "weight" : 130
-                },
-                {
-                    "id"     : "53f879c40000000000000004",
-                    "weight" : 80
+                    "id": "53fcc20d0000000000000005",
+                    "weight": 155
                 }
             ]
         },
         
-                    ... cutted ...
+							...
+							
+```
+
+Get created object
+
+```sh
+curl -XGET http://webgl.dressformer.com/assets/geometry/e488c579-af46-45d3-8647-af5279dc1f86
+```
+
+Result:
+
+```sh
+HTTP/1.1 200 OK
+Server: nginx
+Date: Tue, 26 Aug 2014 19:14:34 GMT
+Content-Type: application/octet-stream
+Content-Length: 4095278
+
+                             ... obj data ...
 ```

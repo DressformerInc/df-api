@@ -25,7 +25,7 @@ func (this *Garment) Find(u *models.User, enc encoder.Encoder) (int, []byte) {
 
 func (this *Garment) FindAll(opts models.URLOptionsScheme, u *models.User, enc encoder.Encoder) (int, []byte) {
 	guid := regexp.MustCompile("\b[A-F0-9]{8}(?:-[A-F0-9]{4}){3}-[A-F0-9]{12}\b")
-	ids := make([]interface{}, 0)
+	ids := make([]string, 0)
 
 	for _, id := range strings.Split(opts.Ids, ",") {
 		if !guid.MatchString(id) {
@@ -35,7 +35,11 @@ func (this *Garment) FindAll(opts models.URLOptionsScheme, u *models.User, enc e
 		}
 	}
 
-	if result := this.model.FindAll(ids); result != nil {
+	if opts.Skip == 0 {
+		opts.Skip = 30
+	}
+
+	if result := this.model.FindAll(ids, opts); result != nil {
 		return http.StatusOK, encoder.Must(enc.Encode(result))
 	}
 

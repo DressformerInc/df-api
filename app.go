@@ -25,7 +25,7 @@ func main() {
 	route := martini.NewRouter()
 
 	m.Use(func(c martini.Context, w http.ResponseWriter) {
-		c.MapTo(encoder.JsonEncoder{}, (*encoder.Encoder)(nil))
+		c.MapTo(encoder.JsonEncoder{PrettyPrint: true}, (*encoder.Encoder)(nil))
 		w.Header().Set("Content-Type", "application/json")
 	})
 
