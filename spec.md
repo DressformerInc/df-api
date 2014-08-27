@@ -1,6 +1,8 @@
 ## Base API
 
 ### /garments
+Get garments list  
+
 __Methods:__ 
 
 - GET
@@ -8,6 +10,7 @@ __Methods:__
 __Parameters:__
 
 - `ids` coma-separated list of ids  
+- `skip` skip "n" records. Default limit is `50`
 
 __Result:__ Array of garment objects
 
@@ -85,7 +88,7 @@ Guest user model
 ```javascript
 {
 	// default manequin
-	"dummy" : "assets.dressformer.com/geometry/22a6dbed-1aab-452b-8f81-2a16e994120b"
+	"dummy" : "webgl.dressformer.com/assets/geometry/22a6dbed-1aab-452b-8f81-2a16e994120b"
 }
 
 ```
@@ -95,7 +98,7 @@ Authorized user contains body settings
 ```javascript
 {
 	// base dummy
-	"dummy" : "assets.dressformer.com/geometry/22a6dbed-1aab-452b-8f81-2a16e994120b"
+	"dummy" : "webgl.dressformer.com/assets/geometry/22a6dbed-1aab-452b-8f81-2a16e994120b"
 
 	// Body object contains only those parameters, which are different from the base one.	
 	"body" : {
@@ -111,7 +114,7 @@ Authorized user contains body settings
 To get morphed mannequin, we should add all users body parameters to the dummy link, e.g.:
 
 ```
-GET assets.dressformer.com/geometry/22a6dbed-1aab-452b-8f81-2a16e994120b?height=174.0&chest=95.0&underbust=72.0&waist=61.5&hips=89.0
+GET webgl.dressformer.com/assets/geometry/22a6dbed-1aab-452b-8f81-2a16e994120b?height=174.0&chest=95.0&underbust=72.0&waist=61.5&hips=89.0
 ```
 
 ## File API
@@ -137,7 +140,7 @@ curl                                                                            
 	-F name=Chest_max.obj                    -F filedata=@Chest_max.obj                    \
 	-F name=KPL_201407_0020_0005_diffuse.jpg -F filedata=@KPL_201407_0020_0005_diffuse.jpg \
 	-F name=KPL_201407_0020_0005_normal.jpg  -F filedata=@KPL_201407_0020_0005_normal.jpg  \
-http://assets.dressformer.com/
+http://webgl.dressformer.com/assets/
 ```
 and returns
 
@@ -211,7 +214,7 @@ __Example:__
 Get morphed geometry
 
 ```sh
-GET assets.dressformer.com/geometry/22a6dbed-1aab-452b-8f81-2a16e994120b?waist=95.0
+GET webgl.dressformer.com/assets/geometry/22a6dbed-1aab-452b-8f81-2a16e994120b?waist=95.0
 ```
 
 ### /image/:id
@@ -243,13 +246,13 @@ __Examples:__
 Get an image with 50% quality
 
 ```sh
-curl -o test.jpg "http://assets.dressformer.com/image/53f735c10000000000000001?q=50"
+curl -o test.jpg "http://webgl.dressformer.com/assets/image/53f735c10000000000000001?q=50"
 ```
 
 Get an image resized to 500x500px (original 2048x2048 becames 500x500) with 50% quality
 
 ```sh
-curl -o test.jpg "http://assets.dressformer.com/image/53f735c10000000000000001?q=50&scale=x500"
+curl -o test.jpg "http://webgl.dressformer.com/assets/image/53f735c10000000000000001?q=50&scale=x500"
 ```
 
 ### More examples
