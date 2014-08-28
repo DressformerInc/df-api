@@ -37,7 +37,7 @@ func main() {
 		}
 
 		w.Header().Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-		w.Header().Add("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token")
+		w.Header().Add("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, X-Requested-With")
 		w.Header().Add("Cache-Control", "max-age=2592000")
 		w.Header().Add("Pragma", "public")
 		w.Header().Add("Cache-Control", "public")
@@ -51,7 +51,6 @@ func main() {
 		(*ctrl.User).Find,
 	)
 
-	// GET /garments
 	route.Get("/garments",
 		binding.Bind(models.URLOptionsScheme{}),
 		construct(&models.User{}),
@@ -59,14 +58,13 @@ func main() {
 		(*ctrl.Garment).FindAll,
 	)
 
-	// GET /garment
-	route.Get("/garment",
+	route.Get("/garments/:id",
 		construct(&models.User{}),
 		construct(&ctrl.Garment{}),
 		(*ctrl.Garment).Find,
 	)
 
-	route.Post("/garment",
+	route.Post("/garments",
 		binding.Bind(models.GarmentScheme{}),
 		construct(&models.User{}),
 		construct(&ctrl.Garment{}),

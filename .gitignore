@@ -1,2 +1,4 @@
 *.pem
 gin-bin
+bin/
+sync

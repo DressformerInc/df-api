@@ -73,7 +73,6 @@ func (this *Garment) Find(id interface{}) *GarmentScheme {
 func (this *Garment) FindAll(ids []string, opts URLOptionsScheme) []GarmentScheme {
 	query := this.Table("garments")
 
-	log.Println("len:", len(ids))
 	if len(ids[0]) > 0 {
 		log.Println("!empty, ", len(ids), ",:", ids)
 		query = query.GetAll(r.Args(ids))
