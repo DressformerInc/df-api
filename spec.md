@@ -11,8 +11,9 @@ __Methods:__
 
 __Parameters:__
 
-- `ids` coma-separated list of ids  
-- `skip` skip "n" records. Default limit is `50`
+- `ids`   Coma separated list of ids.
+- `start` Skip "n" records.
+- `limit` Limit selection. Default value is 50.
 
 __Result:__ Array of garment objects
 
@@ -44,13 +45,14 @@ Update and delete garment with `id`
 		// Public fields
 		
 		"id"    : "43a5dbed-4abb-452a-8f82-9a86e555930b", // Garment Id as a uuid
+
+		"gid"   : "43a5dbed-4abb-452a-8f82-123123123123", // Group id		
 		
 		"name"  : "Some name",
 		
-		"size_name"  : "M", // (String) Any size representation as a string, e.g. 
-		               // "XL", "42", etc..., 
+		"size_name"  : "M", // (String) Size, e.g. "XL", "42", etc...
 
-		"sizes" : [   // (Array of Objects)
+		"sizes" : [
 			{
 				"id"        : "43a5dbed-4abb-452a-8f82-9a86e555930b",
 				"size_name" : "S"
@@ -64,11 +66,13 @@ Update and delete garment with `id`
 		"color" : "", // @todo
 		
 		"assets" : {
-			"geometry" : "assets.dressformer.com/geometry/22a6dbed-1aab-452b-8f81-2a16e994120b"
+			"geometry" : "assets.dressformer.com/geometry/22a6dbed-1aab-452b-8f81-2a16e994120b",
 			
-			"diffuse"  : "assets.dressformer.com/image/53b54559fcb05d3238000002"
+			"diffuse"  : "assets.dressformer.com/image/53b54559fcb05d3238000002",
 			
-			"normal"   : "assets.dressformer.com/image/53b61050eff01c1008000001"
+			"normal"   : "assets.dressformer.com/image/53b61050eff01c1008000001",
+			
+			"specular" : "assets.dressformer.com/image/53b61050eff01c1008000003"
 		}		
 	},	
 ]
