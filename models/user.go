@@ -4,11 +4,11 @@ type UserScheme struct {
 	Dummy string `gorethink:"dummy" json:"dummy"`
 
 	Body struct {
-		Height    float32 `gorethink:"height"    json:"height"`
-		Chest     float32 `gorethink:"chest"     json:"chest"`
-		Underbust float32 `gorethink:"underbust" json:"underbust"`
-		Waist     float32 `gorethink:"waist"     json:"waist"`
-		Hips      float32 `gorethink:"hips"      json:"hips"`
+		Height    float32 `gorethink:"height"    json:"height,omitempty"`
+		Chest     float32 `gorethink:"chest"     json:"chest,omitempty"`
+		Underbust float32 `gorethink:"underbust" json:"underbust,omitempty"`
+		Waist     float32 `gorethink:"waist"     json:"waist,omitempty"`
+		Hips      float32 `gorethink:"hips"      json:"hips,omitempty"`
 	} `gorethink:"body,omitempty" json:"body,omitempty"`
 }
 
@@ -27,6 +27,6 @@ func (*User) Construct(args ...interface{}) interface{} {
 func guest() *UserScheme {
 	user := &UserScheme{}
 
-	user.Dummy = "//assets.dressformer.com/model/"
+	user.Dummy = "//localhost:6500/geometry/e12c24c9-c8b7-45ac-bbd6-f57ee8c362e9"
 	return user
 }

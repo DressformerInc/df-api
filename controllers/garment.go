@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"df/api/models"
+	"github.com/go-martini/martini"
 	"github.com/martini-contrib/encoder"
 	"log"
 	"net/http"
@@ -23,7 +24,9 @@ func (this *Garment) Find(u *models.User, enc encoder.Encoder) (int, []byte) {
 	return http.StatusOK, []byte{}
 }
 
-func (this *Garment) FindAll(opts models.URLOptionsScheme, u *models.User, enc encoder.Encoder) (int, []byte) {
+func (this *Garment) FindAll(opts models.URLOptionsScheme, u *models.User, enc encoder.Encoder, r *http.Request) (int, []byte) {
+	log.Println(r.RequestURI)
+	log.Println("opts:", opts)
 	guid := regexp.MustCompile("\b[A-F0-9]{8}(?:-[A-F0-9]{4}){3}-[A-F0-9]{12}\b")
 	ids := make([]string, 0)
 
@@ -35,15 +38,18 @@ func (this *Garment) FindAll(opts models.URLOptionsScheme, u *models.User, enc e
 		}
 	}
 
-	if opts.Skip == 0 {
-		opts.Skip = 30
+	if opts.Limit == 0 || opts.Limit > 100 {
+		opts.Limit = 25
 	}
 
-	if result := this.model.FindAll(ids, opts); result != nil {
-		return http.StatusOK, encoder.Must(enc.Encode(result))
+	var result []models.GarmentScheme
+	status := http.StatusOK
+
+	if result = this.model.FindAll(ids, opts); result == nil {
+		status = http.StatusNotFound
 	}
 
-	return http.StatusNotFound, []byte{}
+	return status, encoder.Must(enc.Encode(result))
 }
 
 func (this *Garment) Create(u *models.User, payload models.GarmentScheme, enc encoder.Encoder) (int, []byte) {
@@ -54,4 +60,23 @@ func (this *Garment) Create(u *models.User, payload models.GarmentScheme, enc en
 	}
 
 	return http.StatusOK, encoder.Must(enc.Encode(result))
+}
+
+func (this *Garment) Put(u *models.User, payload models.GarmentScheme, enc encoder.Encoder, p martini.Params) (int, []byte) {
+
+	result, err := this.model.Put(p["id"], payload)
+	if err != nil {
+		return http.StatusBadRequest, []byte{}
+	}
+
+	return http.StatusOK, encoder.Must(enc.Encode(result))
+}
+
+func (this *Garment) Remove(u *models.User, enc encoder.Encoder, p martini.Params) (int, []byte) {
+	err := this.model.Remove(p["id"])
+	if err != nil {
+		return http.StatusBadRequest, []byte{}
+	}
+
+	return http.StatusOK, encoder.Must(enc.Encode([]byte{}))
 }

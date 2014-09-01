@@ -3,7 +3,6 @@ package controllers
 import (
 	"df/api/models"
 	"github.com/martini-contrib/encoder"
-	"log"
 	"net/http"
 )
 
@@ -12,8 +11,6 @@ type User struct {
 
 func (*User) Construct(args ...interface{}) interface{} {
 	this := &User{}
-	log.Println("User controller initialized,", this)
-
 	return this
 }
 

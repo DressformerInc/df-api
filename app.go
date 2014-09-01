@@ -30,6 +30,8 @@ func main() {
 	})
 
 	m.Use(func(w http.ResponseWriter, req *http.Request) {
+		log.Println(req.RequestURI)
+
 		if origin := req.Header.Get("Origin"); origin != "" {
 			w.Header().Add("Access-Control-Allow-Origin", origin)
 		} else {
@@ -69,6 +71,20 @@ func main() {
 		construct(&models.User{}),
 		construct(&ctrl.Garment{}),
 		(*ctrl.Garment).Create,
+	)
+
+	route.Put("/garments/:id",
+		binding.Bind(models.GarmentScheme{}),
+		construct(&models.User{}),
+		construct(&ctrl.Garment{}),
+		(*ctrl.Garment).Put,
+	)
+
+	route.Delete(
+		"/garments/:id",
+		construct(&models.User{}),
+		construct(&ctrl.Garment{}),
+		(*ctrl.Garment).Remove,
 	)
 
 	m.Action(route.Handle)
