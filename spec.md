@@ -202,10 +202,16 @@ __Parameters:__
 
 Geometry object structure:
 
-```json
+```javascript
 {
 	"id"            : "22a6dbed-1aab-452b-8f81-2a16e994120b",
+	
 	"base"          : "53f879c40000000000000002",
+	
+	"name"          : "Some optional name",
+	
+	"default_dummy" : true, // optional field. 
+	
 	"morph_targets" : [
 		{
 			"section" : "chest",
