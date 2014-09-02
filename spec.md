@@ -31,7 +31,7 @@ GET /v2/garments?ids=93e92e72-1bdb-436f-bdb9-52dba6c16176
 ```
 
 ### /garments/:id
-__Endpoint:__ `http://v2.dressformer.com/api/garments`  
+__Endpoint:__ `http://v2.dressformer.com/api/garments/:id`  
 
 __Methods:__ 
 Update and delete garment with `id`
