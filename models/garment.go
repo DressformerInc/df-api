@@ -19,11 +19,12 @@ type Size struct {
 }
 
 type GarmentScheme struct {
-	Id       string `gorethink:"id,omitempty" json:"id"   binding:"-"`
-	Gid      string `gorethink:"gid"          json:"gid"`
-	Name     string `gorethink:"name"         json:"name"`
-	SizeName string `gorethink:"size_name"    json:"size_name"`
-	Sizes    []Size `gorethink:"sizes"        json:"sizes"`
+	Id       string `gorethink:"id,omitempty"    json:"id"   binding:"-"`
+	Gid      string `gorethink:"gid"             json:"gid"`
+	Name     string `gorethink:"name"            json:"name"`
+	SizeName string `gorethink:"size_name"       json:"size_name"`
+	Sizes    []Size `gorethink:"sizes"           json:"sizes"`
+	Dummy    string `gorethink:"dummy,omitempty" json:"dummy,omitempty"`
 
 	Assets struct {
 		Geometry string `gorethink:"geometry" json:"geometry"`
@@ -31,8 +32,6 @@ type GarmentScheme struct {
 		Normal   string `gorethink:"normal"   json:"normal"`
 		Specular string `gorethink:"specular" json:"specular"`
 	} `gorethink:"assets" json:"assets"`
-
-	// Sources [][]Source `gorethink:"sources" json:"sources,omitempty"`
 }
 
 type Garment struct {

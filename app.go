@@ -47,11 +47,15 @@ func main() {
 
 	route.Options("/**")
 
+	// User
+
 	route.Get("/user",
 		construct(&models.User{}),
 		construct(&ctrl.User{}),
 		(*ctrl.User).Find,
 	)
+
+	// Garments
 
 	route.Get("/garments",
 		binding.Bind(models.URLOptionsScheme{}),
@@ -85,6 +89,40 @@ func main() {
 		construct(&models.User{}),
 		construct(&ctrl.Garment{}),
 		(*ctrl.Garment).Remove,
+	)
+
+	// Dummies
+
+	route.Get("/dummies",
+		binding.Bind(models.URLOptionsScheme{}),
+		construct(&models.User{}),
+		construct(&ctrl.Dummy{}),
+		(*ctrl.Dummy).FindAll,
+	)
+
+	route.Get("/dummies/:id",
+		construct(&models.User{}),
+		construct(&ctrl.Dummy{}),
+		(*ctrl.Dummy).Find,
+	)
+
+	route.Post("/dummies",
+		binding.Bind(models.DummyScheme{}),
+		construct(&models.User{}),
+		construct(&ctrl.Dummy{}),
+		(*ctrl.Dummy).Create,
+	)
+
+	route.Put("/dummies/:id",
+		construct(&models.User{}),
+		construct(&ctrl.Dummy{}),
+		(*ctrl.Dummy).Put,
+	)
+
+	route.Delete("/dummies/:id",
+		construct(&models.User{}),
+		construct(&ctrl.Dummy{}),
+		(*ctrl.Dummy).Remove,
 	)
 
 	m.Action(route.Handle)

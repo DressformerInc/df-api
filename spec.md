@@ -129,6 +129,89 @@ To get morphed mannequin, we should add all users body parameters to the dummy l
 GET v2.dressformer.com/assets/geometry/22a6dbed-1aab-452b-8f81-2a16e994120b?height=174.0&chest=95.0&underbust=72.0&waist=61.5&hips=89.0
 ```
 
+### /dummies
+Create and Get methods for dummies
+
+__Endpoint:__ `http://v2.dressformer.com/api/dummies`  
+
+
+__Methods:__ 
+
+- GET, POST
+
+__Parameters:__
+
+
+__Result:__ Array of Objects or Object for POST
+
+##### Dummy Model
+
+```json
+
+{
+	"id": "0ae99696-0e13-4c54-8ad7-d1488dffbf65",
+	
+	"name": "default dummy",
+	
+	"default": true,
+	
+	"assets": {
+		"geometry": "//localhost:6500/geometry/e748f388-36f8-47a2-b012-61f1083b80e7"
+	},
+	
+	"body": {
+		"chest"     : 91.154,
+		"underbust" : 77.13,
+		"waist"     : 66.71,
+		"hips"      : 88.88,
+		"height"    : 170
+	}
+}
+
+```
+
+### /dummies/:id
+Update and Delete methods for dummy object
+
+__Endpoint:__ `http://v2.dressformer.com/api/dummies/:id`  
+
+
+__Methods:__ 
+
+- PUT, DELETE
+
+
+__Result:__ Dummy object  
+
+__Example:__
+
+```sh
+curl -XPOST -H "Content-Type:application/json" -d '
+{
+	"name"    : "default dummy", 
+	"default" : true, 
+	"assets"  : {
+		"geometry" : "//localhost:6500/geometry/e748f388-36f8-47a2-b012-61f1083b80e7"
+	}
+}' http://v2.dressformer.com/api/dummies
+```
+
+Result:
+
+```json
+{
+	"id"      : "0ae99696-0e13-4c54-8ad7-d1488dffbf65",
+	"name"    : "default dummy",
+	"default" : true,
+	"assets": {
+		"geometry": "//localhost:6500/geometry/e748f388-36f8-47a2-b012-61f1083b80e7"
+	},
+	"body": {}
+}
+```
+
+
+
 ## File API
 
 ### /
