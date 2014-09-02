@@ -35,17 +35,24 @@ func (*Dummy) Construct(args ...interface{}) interface{} {
 }
 
 func (this *Dummy) Find(id string) *DummyScheme {
-	rows, err := this.Get(id).Run(session())
-	if err != nil {
-		log.Println("Unable to fetch cursor for id:", id, "Error:", err)
-		return nil
+	var query r.Term
+
+	result := &DummyScheme{}
+
+	if id == "" {
+		query = this.GetAllByIndex("default", true)
+	} else {
+		query = this.Get(id)
 	}
 
-	var result *DummyScheme
+	rows, err := query.Run(session())
+	if err != nil {
+		log.Println("Unable to fetch cursor for id:", id, "Error:", err)
+		return result
+	}
 
 	if err = rows.One(&result); err != nil {
 		log.Println("Unable to get data, err:", err)
-		return nil
 	}
 
 	return result
