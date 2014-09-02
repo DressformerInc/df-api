@@ -1,5 +1,11 @@
 package models
 
+import (
+	. "df/api/utils"
+	r "github.com/dancannon/gorethink"
+	"log"
+)
+
 type UserScheme struct {
 	Dummy string `gorethink:"dummy" json:"dummy"`
 
@@ -13,20 +19,36 @@ type UserScheme struct {
 }
 
 type User struct {
-	Object *UserScheme
+	r.Term
 }
 
 func (*User) Construct(args ...interface{}) interface{} {
-	this := &User{
-		Object: guest(),
+	return &User{
+		r.Db("dressformer").Table("users"),
 	}
-
-	return this
 }
 
-func guest() *UserScheme {
-	user := &UserScheme{}
+func (this *User) Find(args ...interface{}) *UserScheme {
+	result := &UserScheme{
+		Dummy: AppConfig.AssetsUrl() + "/geometry/" + getDefaultDummy(),
+	}
 
-	user.Dummy = "//localhost:6500/geometry/e12c24c9-c8b7-45ac-bbd6-f57ee8c362e9"
-	return user
+	return result
+}
+
+func getDefaultDummy() string {
+	result := map[string]interface{}{"id": ""}
+
+	rows, err := r.Db("dressformer").Table("geometry").GetAllByIndex("default_dummy", true).Run(session())
+	if err != nil {
+		log.Println("Unable to fetch cursor for GetAllByIndex(default_dummy:true). Error:", err)
+		return result["id"].(string)
+	}
+
+	if err := rows.One(&result); err != nil {
+		log.Println("Unable to get data, err:", err)
+		return result["id"].(string)
+	}
+
+	return result["id"].(string)
 }

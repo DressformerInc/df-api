@@ -42,14 +42,9 @@ func (this *Garment) FindAll(opts models.URLOptionsScheme, u *models.User, enc e
 		opts.Limit = 25
 	}
 
-	var result []models.GarmentScheme
-	status := http.StatusOK
+	result := this.model.FindAll(ids, opts)
 
-	if result = this.model.FindAll(ids, opts); result == nil {
-		status = http.StatusNotFound
-	}
-
-	return status, encoder.Must(enc.Encode(result))
+	return http.StatusOK, encoder.Must(enc.Encode(result))
 }
 
 func (this *Garment) Create(u *models.User, payload models.GarmentScheme, enc encoder.Encoder) (int, []byte) {
@@ -78,5 +73,5 @@ func (this *Garment) Remove(u *models.User, enc encoder.Encoder, p martini.Param
 		return http.StatusBadRequest, []byte{}
 	}
 
-	return http.StatusOK, encoder.Must(enc.Encode([]byte{}))
+	return http.StatusOK, []byte{}
 }

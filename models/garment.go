@@ -22,7 +22,7 @@ type GarmentScheme struct {
 	Id       string `gorethink:"id,omitempty" json:"id"   binding:"-"`
 	Gid      string `gorethink:"gid"          json:"gid"`
 	Name     string `gorethink:"name"         json:"name"`
-	SizeName string `gorethink:"size_name"    json:"size"`
+	SizeName string `gorethink:"size_name"    json:"size_name"`
 	Sizes    []Size `gorethink:"sizes"        json:"sizes"`
 
 	Assets struct {
@@ -41,7 +41,7 @@ type Garment struct {
 
 func (*Garment) Construct(args ...interface{}) interface{} {
 	return &Garment{
-		r.Db("dressformer"),
+		r.Db("dressformer").Table("garments"),
 	}
 }
 
@@ -51,7 +51,7 @@ func (this *Garment) Find(id interface{}) *GarmentScheme {
 
 	switch t := id.(type) {
 	case oid.ObjectId:
-		query = this.Table("garments").GetAllByIndex("assetsGeometry", id.(oid.ObjectId).String())
+		query = this.GetAllByIndex("assetsGeometry", id.(oid.ObjectId).String())
 
 	default:
 		log.Println("Unexpected type:", t)
@@ -75,13 +75,13 @@ func (this *Garment) Find(id interface{}) *GarmentScheme {
 }
 
 func (this *Garment) FindAll(ids []string, opts URLOptionsScheme) []GarmentScheme {
-	query := this.Table("garments")
+	var query r.Term
 
 	if len(ids[0]) > 0 {
 		log.Println("!empty, ", len(ids), ",:", ids)
-		query = query.GetAll(r.Args(ids))
+		query = this.GetAll(r.Args(ids))
 	} else {
-		query.Skip(opts.Start).Limit(opts.Limit)
+		query = this.Skip(opts.Start).Limit(opts.Limit)
 	}
 
 	rows, err := query.Run(session())
@@ -105,7 +105,7 @@ func (this *Garment) Create(payload GarmentScheme) (*GarmentScheme, error) {
 		payload.Gid = uuid.New()
 	}
 
-	result, err := this.Table("garments").Insert(payload, r.InsertOpts{ReturnVals: true}).Run(session())
+	result, err := this.Insert(payload, r.InsertOpts{ReturnVals: true}).Run(session())
 	if err != nil {
 		log.Println("Error inserting data:", err)
 		return nil, errors.New("Internal server error")
@@ -125,7 +125,7 @@ func (this *Garment) Create(payload GarmentScheme) (*GarmentScheme, error) {
 }
 
 func (this *Garment) Put(id string, payload GarmentScheme) (*GarmentScheme, error) {
-	result, err := this.Table("garments").Get(id).Update(payload, r.UpdateOpts{ReturnVals: true}).Run(session())
+	result, err := this.Get(id).Update(payload, r.UpdateOpts{ReturnVals: true}).Run(session())
 	if err != nil {
 		log.Println("Error updating:", id, "with data:", payload, "error:", err)
 		return nil, errors.New("Wrong data")
@@ -144,7 +144,7 @@ func (this *Garment) Put(id string, payload GarmentScheme) (*GarmentScheme, erro
 }
 
 func (this *Garment) Remove(id string) error {
-	_, err := this.Table("garments").Get(id).Delete().Run(session())
+	_, err := this.Get(id).Delete().Run(session())
 	if err != nil {
 		log.Println("Error deleting:", id, "error:", err)
 		return errors.New("Internal server error")

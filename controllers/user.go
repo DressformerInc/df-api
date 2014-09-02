@@ -15,5 +15,6 @@ func (*User) Construct(args ...interface{}) interface{} {
 }
 
 func (this *User) Find(u *models.User, enc encoder.Encoder) (int, []byte) {
-	return http.StatusOK, encoder.Must(enc.Encode(u.Object))
+	user := u.Find(nil)
+	return http.StatusOK, encoder.Must(enc.Encode(user))
 }

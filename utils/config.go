@@ -13,6 +13,11 @@ type ConfigScheme struct {
 		SSLCert  string `json:"ssl_cert"`
 		SSLKey   string `json:"ssl_key"`
 	} `json:"application"`
+
+	Endpoints struct {
+		Api    string `json:"api"`
+		Assets string `json:"assets"`
+	} `json:"endpoints"`
 }
 
 func (this *ConfigScheme) ListenOn() string {
@@ -29,4 +34,12 @@ func (this *ConfigScheme) SSLCert() string {
 
 func (this *ConfigScheme) SSLKey() string {
 	return this.App.SSLKey
+}
+
+func (this *ConfigScheme) ApiUrl() string {
+	return this.Endpoints.Api
+}
+
+func (this *ConfigScheme) AssetsUrl() string {
+	return this.Endpoints.Assets
 }

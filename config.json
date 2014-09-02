@@ -6,6 +6,11 @@
         "ssl_key"   : "./key.pem"
     },
 
+    "endpoints"  : {
+        "api"    : "//localhost:5000",
+        "assets" : "//localhost:6500"
+    },
+
     "connections"   : {
     	"rethink" : {
             "spec"    : "localhost:28015",
