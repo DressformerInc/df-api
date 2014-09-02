@@ -1,9 +1,9 @@
 ## Base API
 
-#### Current endpoint `http://webgl.dressformer.com/api`
+### /garments 
+Get garments list. Create new garment.  
 
-### /garments
-Get garments list. Create new garment.
+__Endpoint:__ `http://v2.dressformer.com/api/garments`  
 
 __Methods:__ 
 
@@ -31,6 +31,8 @@ GET /v2/garments?ids=93e92e72-1bdb-436f-bdb9-52dba6c16176
 ```
 
 ### /garments/:id
+__Endpoint:__ `http://v2.dressformer.com/api/garments`  
+
 __Methods:__ 
 Update and delete garment with `id`
 
@@ -79,6 +81,9 @@ Update and delete garment with `id`
 ```
 
 ### /user
+__Endpoint:__ `http://v2.dressformer.com/api/user`  
+
+
 __Methods:__ 
 
 - GET, POST, PUT
@@ -126,10 +131,10 @@ GET webgl.dressformer.com/assets/geometry/22a6dbed-1aab-452b-8f81-2a16e994120b?h
 
 ## File API
 
-#### Current endpoint `http://webgl.dressformer.com/api`
-
 ### /
 _Upload files to asset._
+
+__Endpoint:__ `http://v2.dressformer.com/assets/`  
   
 __Methods:__
 
@@ -176,6 +181,8 @@ and returns
 
 
 ### /geometry/:id
+__Endpoint:__ `http://v2.dressformer.com/assets/geometry/:id`  
+
 __Methods:__
 
 - GET, POST, PUT, DELETE
@@ -233,6 +240,7 @@ GET webgl.dressformer.com/assets/geometry/22a6dbed-1aab-452b-8f81-2a16e994120b?w
 ```
 
 ### /image/:id
+__Endpoint:__ `http://v2.dressformer.com/assets/image/:id`  
 	
 __Methods:__
 
