@@ -89,7 +89,7 @@ Update and delete garment with `id`
 			"specular" : {
 				"url"       : "//v2.dressformer.com/image/53b61050eff01c1008000003",
 				"id"        : "53b61050eff01c1008000003",
-				"orig_name: : "KPL_123_spec.jpg"
+				"orig_name  : "KPL_123_spec.jpg"
 			},
 		}		
 	},	
