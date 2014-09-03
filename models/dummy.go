@@ -12,7 +12,7 @@ type DummyScheme struct {
 	Default bool   `gorethink:"default,omitempty" json:"default,omitempty"`
 
 	Assets struct {
-		Geometry string `gorethink:"geometry,omitempty" json:"geometry,omitempty"`
+		Geometry Source `gorethink:"geometry,omitempty" json:"geometry,omitempty"`
 	} `gorethink:"assets,omitempty" json:"assets,omitempty"`
 
 	Body struct {
@@ -55,6 +55,8 @@ func (this *Dummy) Find(id string) *DummyScheme {
 		log.Println("Unable to get data, err:", err)
 	}
 
+	url(&result.Assets.Geometry, "geometry")
+
 	return result
 }
 
@@ -83,6 +85,10 @@ func (this *Dummy) FindAll(ids []string, opts URLOptionsScheme) []DummyScheme {
 
 	if err = rows.All(&result); err != nil {
 		log.Println("Unable to get data, err:", err)
+	}
+
+	for idx, _ := range result {
+		url(&result[idx].Assets.Geometry, "geometry")
 	}
 
 	return result

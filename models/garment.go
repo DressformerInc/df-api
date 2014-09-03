@@ -7,30 +7,25 @@ import (
 	"log"
 )
 
-type Source struct {
-	Id     string  `gorethink:"id" json:"id"`
-	Weight float32 `gorethink:"id" json:"weight"`
-}
-
 type Size struct {
-	Id       string `gorethink:"id"        json:"id"`
-	SizeName string `gorethink:"size_name" json:"size_name"`
+	Id       string `gorethink:"id,omitempty"        json:"id,omitempty"`
+	SizeName string `gorethink:"size_name,omitempty" json:"size_name,omitempty"`
 }
 
 type GarmentScheme struct {
-	Id       string `gorethink:"id,omitempty"    json:"id"   binding:"-"`
-	Gid      string `gorethink:"gid"             json:"gid"`
-	Name     string `gorethink:"name"            json:"name"`
-	SizeName string `gorethink:"size_name"       json:"size_name"`
-	Sizes    []Size `gorethink:"sizes"           json:"sizes"`
-	DummyId  string `gorethink:"dummy_id,omitempty" json:"dummy_id,omitempty"`
+	Id       string `gorethink:"id,omitempty"        json:"id"   binding:"-"`
+	Gid      string `gorethink:"gid,omitempty"       json:"gid,omitempty"`
+	Name     string `gorethink:"name,omitempty"      json:"name,omitempty"`
+	SizeName string `gorethink:"size_name,omitempty" json:"size_name,omitempty"`
+	Sizes    []Size `gorethink:"sizes,omitempty"     json:"sizes,,omitempty"`
+	DummyId  string `gorethink:"dummy_id,omitempty"  json:"dummy_id,omitempty"`
 
 	Assets struct {
-		Geometry string `gorethink:"geometry" json:"geometry"`
-		Diffuse  string `gorethink:"diffuse"  json:"diffuse"`
-		Normal   string `gorethink:"normal"   json:"normal"`
-		Specular string `gorethink:"specular" json:"specular"`
-	} `gorethink:"assets" json:"assets"`
+		Geometry Source `gorethink:"geometry,omitempty" json:"geometry,omitempty"`
+		Diffuse  Source `gorethink:"diffuse,omitempty"  json:"diffuse,omitempty"`
+		Normal   Source `gorethink:"normal,omitempty"   json:"normal,omitempty"`
+		Specular Source `gorethink:"specular,omitempty" json:"specular,omitempty"`
+	} `gorethink:"assets,omitempty" json:"assets,omitempty"`
 }
 
 type Garment struct {
@@ -60,6 +55,11 @@ func (this *Garment) Find(id string) *GarmentScheme {
 		return nil
 	}
 
+	url(&result.Assets.Geometry, "geometry")
+	url(&result.Assets.Diffuse, "image")
+	url(&result.Assets.Normal, "image")
+	url(&result.Assets.Specular, "image")
+
 	return result
 }
 
@@ -84,6 +84,13 @@ func (this *Garment) FindAll(ids []string, opts URLOptionsScheme) []GarmentSchem
 
 	if err = rows.All(&result); err != nil {
 		log.Println("Unable to get data, err:", err)
+	}
+
+	for idx, _ := range result {
+		url(&result[idx].Assets.Geometry, "geometry")
+		url(&result[idx].Assets.Diffuse, "image")
+		url(&result[idx].Assets.Normal, "image")
+		url(&result[idx].Assets.Specular, "image")
 	}
 
 	return result

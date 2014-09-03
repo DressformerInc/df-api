@@ -69,13 +69,28 @@ Update and delete garment with `id`
 		"color" : "", // @todo
 		
 		"assets" : {
-			"geometry" : "assets.dressformer.com/geometry/22a6dbed-1aab-452b-8f81-2a16e994120b",
+			"geometry" : {
+				"url" : "//v2.dressformer.com/geometry/22a6dbed-1aab-452b-8f81-2a16e994120b",
+				"id"  : "22a6dbed-1aab-452b-8f81-2a16e994120b"
+			}
+						
+			"diffuse"  : {
+				"url"       : "//v2.dressformer.com/image/53b54559fcb05d3238000002",
+				"id"        : "53b54559fcb05d3238000002",
+				"orig_name" : "KPL_123_diffuse.jpg"
+			},
 			
-			"diffuse"  : "assets.dressformer.com/image/53b54559fcb05d3238000002",
+			"normal"   : {
+				"url"       : "//v2.dressformer.com/image/53b61050eff01c1008000001",
+				"id"        : "53b61050eff01c1008000001",
+				"orig_name: : "KPL_123_normal.jpg"
+			},
 			
-			"normal"   : "assets.dressformer.com/image/53b61050eff01c1008000001",
-			
-			"specular" : "assets.dressformer.com/image/53b61050eff01c1008000003"
+			"specular" : {
+				"url"       : "//v2.dressformer.com/image/53b61050eff01c1008000003",
+				"id"        : "53b61050eff01c1008000003",
+				"orig_name: : "KPL_123_spec.jpg"
+			},
 		}		
 	},	
 ]
@@ -96,32 +111,26 @@ __Result:__ Object
 
 ##### User Model
 
-Guest user model
-
 ```javascript
 {
-	// default manequin
-	"dummy" : "v2.dressformer.com/assets/geometry/22a6dbed-1aab-452b-8f81-2a16e994120b"
-}
-
-```
-
-Authorized user contains body settings
-
-```javascript
-{
-	// base dummy
-	"dummy" : "v2.dressformer.com/assets/geometry/22a6dbed-1aab-452b-8f81-2a16e994120b"
-
-	// Body object contains only those parameters, which are different from the base one.	
-	"body" : {
-		"height"    : 174.0,
-		"chest"     : 95.0,
-		"underbust" : 72.0,
-		"waist"     : 61.5,
-		"hips"      : 89.0
+	"dummy": {
+		"id": "0ae99696-0e13-4c54-8ad7-d1488dffbf65",
+		"default": true,
+		"assets": {
+			"geometry": {
+				"url" : "//localhost:6500/geometry/e748f388-36f8-47a2-b012-61f1083b80e7"
+			}
+		},
+		"body": {
+			"height"    : 174.0,
+			"chest"     : 95.0,
+			"underbust" : 72.0,
+			"waist"     : 61.5,
+			"hips"      : 89.0
+		}
 	}
 }
+
 ```
 
 To get morphed mannequin, we should add all users body parameters to the dummy link, e.g.:
@@ -157,7 +166,10 @@ __Result:__ Array of Objects or Object for POST
 	"default": true,
 	
 	"assets": {
-		"geometry": "//localhost:6500/geometry/e748f388-36f8-47a2-b012-61f1083b80e7"
+		"geometry": {
+			"url" : "//v2.dressformer.com/geometry/e748f388-36f8-47a2-b012-61f1083b80e7",
+			"id"  : "e748f388-36f8-47a2-b012-61f1083b80e7"
+		}
 	},
 	
 	"body": {
@@ -192,7 +204,9 @@ curl -XPOST -H "Content-Type:application/json" -d '
 	"name"    : "default dummy", 
 	"default" : true, 
 	"assets"  : {
-		"geometry" : "//localhost:6500/geometry/e748f388-36f8-47a2-b012-61f1083b80e7"
+		"geometry" : {
+			"id" : "e748f388-36f8-47a2-b012-61f1083b80e7"
+		}
 	}
 }' http://v2.dressformer.com/api/dummies
 ```
@@ -205,7 +219,10 @@ Result:
 	"name"    : "default dummy",
 	"default" : true,
 	"assets": {
-		"geometry": "//localhost:6500/geometry/e748f388-36f8-47a2-b012-61f1083b80e7"
+		"geometry": {
+			"url" : "//localhost:6500/geometry/e748f388-36f8-47a2-b012-61f1083b80e7",
+			"id"  : "e748f388-36f8-47a2-b012-61f1083b80e7"
+		}
 	},
 	"body": {}
 }
@@ -305,9 +322,16 @@ Geometry object structure:
 		{
 			"section" : "chest",
 			"sources" : [
-				{"id" : "53f879c40000000000000002", "weight" : 116.4},
-				{"id" : "53f879c40000000000000003", "weight" : 130.0},
-				{"id" : "53f879c40000000000000004", "weight" : 80.0}
+				{
+					"id"        : "53f879c40000000000000003", 
+					"weight"    : 130.0,
+					"orig_name" : "chest_max.obj"
+				},
+				{
+					"id"        : "53f879c40000000000000004", 
+					"weight"    : 80.0,
+					"orig_name" : "chest_min.obj"
+				}
 			]
 		}
 }
