@@ -5,15 +5,7 @@ import (
 )
 
 type UserScheme struct {
-	Dummy string `gorethink:"dummy" json:"dummy"`
-
-	Body struct {
-		Height    float32 `gorethink:"height"    json:"height,omitempty"`
-		Chest     float32 `gorethink:"chest"     json:"chest,omitempty"`
-		Underbust float32 `gorethink:"underbust" json:"underbust,omitempty"`
-		Waist     float32 `gorethink:"waist"     json:"waist,omitempty"`
-		Hips      float32 `gorethink:"hips"      json:"hips,omitempty"`
-	} `gorethink:"body,omitempty" json:"body,omitempty"`
+	Dummy *DummyScheme `json:"dummy"`
 }
 
 type User struct {
@@ -30,7 +22,7 @@ func (*User) Construct(args ...interface{}) interface{} {
 
 func (this *User) Find(args ...interface{}) *UserScheme {
 	result := &UserScheme{
-		Dummy: this.dummy.Find("").Assets.Geometry,
+		Dummy: this.dummy.Default(),
 	}
 
 	return result

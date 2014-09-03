@@ -44,11 +44,12 @@ Update and delete garment with `id`
 ```javascript
 [
 	{
-		// Public fields
 		
 		"id"    : "43a5dbed-4abb-452a-8f82-9a86e555930b", // Garment Id as a uuid
 
-		"gid"   : "43a5dbed-4abb-452a-8f82-123123123123", // Group id		
+		"gid"   : "43a5dbed-4abb-452a-8f82-123123123123", // Group id
+				
+		"dummy_id" : "0ae99696-0e13-4c54-8ad7-d1488dffbf65",
 		
 		"name"  : "Some name",
 		
@@ -299,8 +300,6 @@ Geometry object structure:
 	"base"          : "53f879c40000000000000002",
 	
 	"name"          : "Some optional name",
-	
-	"default_dummy" : true, // optional field. 
 	
 	"morph_targets" : [
 		{

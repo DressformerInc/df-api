@@ -114,6 +114,7 @@ func main() {
 	)
 
 	route.Put("/dummies/:id",
+		binding.Bind(models.DummyScheme{}),
 		construct(&models.User{}),
 		construct(&ctrl.Dummy{}),
 		(*ctrl.Dummy).Put,

@@ -7,20 +7,20 @@ import (
 )
 
 type DummyScheme struct {
-	Id      string `gorethink:"id,omitempty" json:"id"   binding:"-"`
-	Name    string `gorethink:"name"         json:"name"`
-	Default bool   `gorethink:"default"      json:"default"`
+	Id      string `gorethink:"id,omitempty"      json:"id"   binding:"-"`
+	Name    string `gorethink:"name,omitempty"    json:"name,omitempty"`
+	Default bool   `gorethink:"default,omitempty" json:"default,omitempty"`
 
 	Assets struct {
-		Geometry string `gorethink:"geometry" json:"geometry"`
-	} `gorethink:"assets" json:"assets"`
+		Geometry string `gorethink:"geometry,omitempty" json:"geometry,omitempty"`
+	} `gorethink:"assets,omitempty" json:"assets,omitempty"`
 
 	Body struct {
-		Height    float32 `gorethink:"height"    json:"height,omitempty"`
-		Chest     float32 `gorethink:"chest"     json:"chest,omitempty"`
-		Underbust float32 `gorethink:"underbust" json:"underbust,omitempty"`
-		Waist     float32 `gorethink:"waist"     json:"waist,omitempty"`
-		Hips      float32 `gorethink:"hips"      json:"hips,omitempty"`
+		Height    float32 `gorethink:"height,omitempty"    json:"height,omitempty"`
+		Chest     float32 `gorethink:"chest,omitempty"     json:"chest,omitempty"`
+		Underbust float32 `gorethink:"underbust,omitempty" json:"underbust,omitempty"`
+		Waist     float32 `gorethink:"waist,omitempty"     json:"waist,omitempty"`
+		Hips      float32 `gorethink:"hips,omitempty"      json:"hips,omitempty"`
 	} `gorethink:"body,omitempty" json:"body,omitempty"`
 }
 
@@ -58,6 +58,10 @@ func (this *Dummy) Find(id string) *DummyScheme {
 	return result
 }
 
+func (this *Dummy) Default() *DummyScheme {
+	return this.Find("")
+}
+
 func (this *Dummy) FindAll(ids []string, opts URLOptionsScheme) []DummyScheme {
 	var query r.Term
 
@@ -85,6 +89,10 @@ func (this *Dummy) FindAll(ids []string, opts URLOptionsScheme) []DummyScheme {
 }
 
 func (this *Dummy) Create(payload DummyScheme) (*DummyScheme, error) {
+	if payload.Default {
+		this.ResetDefault()
+	}
+
 	result, err := this.Insert(payload, r.InsertOpts{ReturnVals: true}).Run(session())
 	if err != nil {
 		log.Println("Error inserting data:", err)
@@ -105,6 +113,10 @@ func (this *Dummy) Create(payload DummyScheme) (*DummyScheme, error) {
 }
 
 func (this *Dummy) Put(id string, payload DummyScheme) (*DummyScheme, error) {
+	if payload.Default {
+		this.ResetDefault()
+	}
+
 	result, err := this.Get(id).Update(payload, r.UpdateOpts{ReturnVals: true}).Run(session())
 	if err != nil {
 		log.Println("Error updating:", id, "with data:", payload, "error:", err)
@@ -131,4 +143,11 @@ func (this *Dummy) Remove(id string) error {
 	}
 
 	return nil
+}
+
+func (this *Dummy) ResetDefault() {
+	_, err := this.GetAllByIndex("default", true).Update(map[string]bool{"default": false}).Run(session())
+	if err != nil {
+		log.Println("Unable to update. Error:", err)
+	}
 }

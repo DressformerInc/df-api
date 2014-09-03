@@ -20,8 +20,8 @@ func (*Garment) Construct(args ...interface{}) interface{} {
 	}
 }
 
-func (this *Garment) Find(u *models.User, enc encoder.Encoder) (int, []byte) {
-	return http.StatusOK, []byte{}
+func (this *Garment) Find(u *models.User, enc encoder.Encoder, params martini.Params) (int, []byte) {
+	return http.StatusOK, encoder.Must(enc.Encode(this.model.Find(params["id"])))
 }
 
 func (this *Garment) FindAll(opts models.URLOptionsScheme, u *models.User, enc encoder.Encoder, r *http.Request) (int, []byte) {

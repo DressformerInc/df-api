@@ -3,7 +3,6 @@ package models
 import (
 	"code.google.com/p/go-uuid/uuid"
 	"errors"
-	"github.com/3d0c/oid"
 	r "github.com/dancannon/gorethink"
 	"log"
 )
@@ -24,7 +23,7 @@ type GarmentScheme struct {
 	Name     string `gorethink:"name"            json:"name"`
 	SizeName string `gorethink:"size_name"       json:"size_name"`
 	Sizes    []Size `gorethink:"sizes"           json:"sizes"`
-	Dummy    string `gorethink:"dummy,omitempty" json:"dummy,omitempty"`
+	DummyId  string `gorethink:"dummy_id,omitempty" json:"dummy_id,omitempty"`
 
 	Assets struct {
 		Geometry string `gorethink:"geometry" json:"geometry"`
@@ -36,34 +35,25 @@ type GarmentScheme struct {
 
 type Garment struct {
 	r.Term
+	dummy *Dummy
 }
 
 func (*Garment) Construct(args ...interface{}) interface{} {
 	return &Garment{
 		r.Db("dressformer").Table("garments"),
+		(*Dummy).Construct(nil).(*Dummy),
 	}
 }
 
 // obsolete
-func (this *Garment) Find(id interface{}) *GarmentScheme {
-	var query r.Term
+func (this *Garment) Find(id string) *GarmentScheme {
+	var result *GarmentScheme
 
-	switch t := id.(type) {
-	case oid.ObjectId:
-		query = this.GetAllByIndex("assetsGeometry", id.(oid.ObjectId).String())
-
-	default:
-		log.Println("Unexpected type:", t)
-		return nil
-	}
-
-	rows, err := query.Run(session())
+	rows, err := this.Get(id).Run(session())
 	if err != nil {
 		log.Println("Unable to fetch cursor for id:", id, "Error:", err)
 		return nil
 	}
-
-	var result *GarmentScheme
 
 	if err = rows.One(&result); err != nil {
 		log.Println("Unable to get data, err:", err)
@@ -102,6 +92,10 @@ func (this *Garment) FindAll(ids []string, opts URLOptionsScheme) []GarmentSchem
 func (this *Garment) Create(payload GarmentScheme) (*GarmentScheme, error) {
 	if payload.Gid == "" {
 		payload.Gid = uuid.New()
+	}
+
+	if payload.DummyId == "" {
+		payload.DummyId = this.dummy.Default().Id
 	}
 
 	result, err := this.Insert(payload, r.InsertOpts{ReturnVals: true}).Run(session())
