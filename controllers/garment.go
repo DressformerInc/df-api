@@ -21,12 +21,15 @@ func (*Garment) Construct(args ...interface{}) interface{} {
 }
 
 func (this *Garment) Find(u *models.User, enc encoder.Encoder, params martini.Params) (int, []byte) {
-	return http.StatusOK, encoder.Must(enc.Encode(this.model.Find(params["id"])))
+	result := this.model.Find(params["id"])
+	if result == nil {
+		return http.StatusOK, encoder.Must(enc.Encode(struct{}{}))
+	}
+
+	return http.StatusOK, encoder.Must(enc.Encode(result))
 }
 
 func (this *Garment) FindAll(opts models.URLOptionsScheme, u *models.User, enc encoder.Encoder, r *http.Request) (int, []byte) {
-	log.Println(r.RequestURI)
-	log.Println("opts:", opts)
 	guid := regexp.MustCompile("\b[A-F0-9]{8}(?:-[A-F0-9]{4}){3}-[A-F0-9]{12}\b")
 	ids := make([]string, 0)
 

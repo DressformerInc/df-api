@@ -1,4 +1,32 @@
-## Base API
+Base API
+============================
+
+### Common
+__Content negotiation:__  
+By default all data is sent and received as JSON. _"Content-Type"_ header should be set to `application/json`  
+
+__Pagination:__  
+Requests that return multiple items will be paginated to 25 items by default. You can control it with `start` and `limit` parameters. If `limit` is more than 100, default value will be set.  
+
+__Errors:__  
+
+- If item is not found, `200 OK` and empty result: `{}` or `[]` will be sent.
+- Sending invalid JSON will result in a `400 Bad Request` response.
+- Sending the wrong type of JSON values will result in a `400 Bad Request` response.
+- Sending invalid fields will result in a `422 Unprocessable Entity` response.
+
+Every 4XX response contains JSON with an error object like
+
+```
+{
+	"errors": [
+		{
+			"classification": "DeserializationError",
+			"message": "invalid character '\\\\' looking for beginning of value"
+		}
+	]
+}
+```
 
 ### /garments 
 Get garments list. Create new garment.  
@@ -37,7 +65,6 @@ __Methods:__
 Update and delete garment with `id`
 
 - PUT, DELETE
-
 
 #####  Garment Model
 
@@ -89,7 +116,7 @@ Update and delete garment with `id`
 			"specular" : {
 				"url"       : "//v2.dressformer.com/image/53b61050eff01c1008000003",
 				"id"        : "53b61050eff01c1008000003",
-				"orig_name  : "KPL_123_spec.jpg"
+				"orig_name" : "KPL_123_spec.jpg"
 			},
 		}		
 	},	
@@ -230,7 +257,8 @@ Result:
 
 
 
-## File API
+File API
+============================
 
 ### /
 _Upload files to asset._

@@ -2,11 +2,10 @@ package models
 
 import (
 	r "github.com/dancannon/gorethink"
-	// "log"
 )
 
 type UserScheme struct {
-	Dummy DummyScheme `json:"dummy"`
+	Dummy *DummyScheme `json:"dummy,omitempty"`
 }
 
 type User struct {
@@ -22,9 +21,11 @@ func (*User) Construct(args ...interface{}) interface{} {
 }
 
 func (this *User) Find(args ...interface{}) *UserScheme {
-	result := &UserScheme{
-		Dummy: *this.dummy.Default(),
+	user := &UserScheme{}
+
+	if this.dummy != nil {
+		user.Dummy = this.dummy.Default()
 	}
 
-	return result
+	return user
 }

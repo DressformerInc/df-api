@@ -30,7 +30,7 @@ func main() {
 	})
 
 	m.Use(func(w http.ResponseWriter, req *http.Request) {
-		log.Println(req.RequestURI)
+		log.Println(req.Method, req.RequestURI)
 
 		if origin := req.Header.Get("Origin"); origin != "" {
 			w.Header().Add("Access-Control-Allow-Origin", origin)
@@ -58,7 +58,8 @@ func main() {
 	// Garments
 
 	route.Get("/garments",
-		binding.Bind(models.URLOptionsScheme{}),
+		binding.Form(models.URLOptionsScheme{}),
+		ErrorHandler,
 		construct(&models.User{}),
 		construct(&ctrl.Garment{}),
 		(*ctrl.Garment).FindAll,
@@ -71,14 +72,16 @@ func main() {
 	)
 
 	route.Post("/garments",
-		binding.Bind(models.GarmentScheme{}),
+		binding.Json(models.GarmentScheme{}),
+		ErrorHandler,
 		construct(&models.User{}),
 		construct(&ctrl.Garment{}),
 		(*ctrl.Garment).Create,
 	)
 
 	route.Put("/garments/:id",
-		binding.Bind(models.GarmentScheme{}),
+		binding.Json(models.GarmentScheme{}),
+		ErrorHandler,
 		construct(&models.User{}),
 		construct(&ctrl.Garment{}),
 		(*ctrl.Garment).Put,
@@ -94,7 +97,8 @@ func main() {
 	// Dummies
 
 	route.Get("/dummies",
-		binding.Bind(models.URLOptionsScheme{}),
+		binding.Form(models.URLOptionsScheme{}),
+		ErrorHandler,
 		construct(&models.User{}),
 		construct(&ctrl.Dummy{}),
 		(*ctrl.Dummy).FindAll,
@@ -107,14 +111,16 @@ func main() {
 	)
 
 	route.Post("/dummies",
-		binding.Bind(models.DummyScheme{}),
+		binding.Json(models.DummyScheme{}),
+		ErrorHandler,
 		construct(&models.User{}),
 		construct(&ctrl.Dummy{}),
 		(*ctrl.Dummy).Create,
 	)
 
 	route.Put("/dummies/:id",
-		binding.Bind(models.DummyScheme{}),
+		binding.Json(models.DummyScheme{}),
+		ErrorHandler,
 		construct(&models.User{}),
 		construct(&ctrl.Dummy{}),
 		(*ctrl.Dummy).Put,
