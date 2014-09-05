@@ -22,6 +22,7 @@ type GarmentScheme struct {
 
 	Assets struct {
 		Geometry Source `gorethink:"geometry,omitempty" json:"geometry,omitempty"`
+		Mtl      Source `gorethink:"mtl,omitempty"      json:"mtl,omitempty"`
 		Diffuse  Source `gorethink:"diffuse,omitempty"  json:"diffuse,omitempty"`
 		Normal   Source `gorethink:"normal,omitempty"   json:"normal,omitempty"`
 		Specular Source `gorethink:"specular,omitempty" json:"specular,omitempty"`
@@ -80,7 +81,7 @@ func (this *Garment) FindAll(ids []string, opts URLOptionsScheme) []GarmentSchem
 		return nil
 	}
 
-	var result []GarmentScheme
+	result := []GarmentScheme{}
 
 	if err = rows.All(&result); err != nil {
 		log.Println("Unable to get data, err:", err)
@@ -138,7 +139,9 @@ func (this *Garment) Put(id string, payload GarmentScheme) (*GarmentScheme, erro
 		return nil, errors.New("Internal server error")
 	}
 
-	log.Println("new_val:", response.NewValue)
+	if response.NewValue == nil {
+		return nil, errors.New("Wrong data")
+	}
 
 	return response.NewValue.(*GarmentScheme), nil
 }

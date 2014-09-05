@@ -82,7 +82,7 @@ func (this *Dummy) FindAll(ids []string, opts URLOptionsScheme) []DummyScheme {
 		return nil
 	}
 
-	var result []DummyScheme
+	result := []DummyScheme{}
 
 	if err = rows.All(&result); err != nil {
 		log.Println("Unable to get data, err:", err)
@@ -137,7 +137,9 @@ func (this *Dummy) Put(id string, payload DummyScheme) (*DummyScheme, error) {
 		return nil, errors.New("Internal server error")
 	}
 
-	log.Println("new_val:", response.NewValue)
+	if response.NewValue == nil {
+		return nil, errors.New("Wrong data")
+	}
 
 	return response.NewValue.(*DummyScheme), nil
 }

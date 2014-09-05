@@ -99,7 +99,13 @@ Update and delete garment with `id`
 			"geometry" : {
 				"url" : "//v2.dressformer.com/geometry/22a6dbed-1aab-452b-8f81-2a16e994120b",
 				"id"  : "22a6dbed-1aab-452b-8f81-2a16e994120b"
-			}
+			},
+			
+			"mtl"     : {
+				"url"       : "//v2.dressformer.com/53b54559fcb05d323800000a",
+				"id"        : "53b54559fcb05d323800000a",
+				"orig_name" : "base.mtl"
+			},
 						
 			"diffuse"  : {
 				"url"       : "//v2.dressformer.com/image/53b54559fcb05d3238000002",
@@ -457,7 +463,9 @@ Create geometry object for uploaded files.
 ```sh
 curl -XPOST -H 'Content-Type:application/json' -d '
 {
-    "base" : "53fcc20d0000000000000001",
+    "base" : {
+    	"id" : "53fcc20d0000000000000001"
+    },
     "name" : "Base dummy",
     "morph_targets" : [
         {
