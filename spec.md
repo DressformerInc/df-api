@@ -170,8 +170,8 @@ __Result:__ Object
 		"f848f388-41f1-43b3-b012-31f1023b11e1" 
 	],
 
-	// User defined by PUT request
-	"ad_hoc" : [
+	// Personal settings for objects. Control with /user/objects API
+	"objects" : [
 		{
 			"id" : "e748f388-36f8-47a2-b012-61f1083b80e7",
 			"assets" : {
