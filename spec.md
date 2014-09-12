@@ -151,7 +151,7 @@ __Result:__ Object
 		"default": true,
 		"assets": {
 			"geometry": {
-				"url" : "//localhost:6500/geometry/e748f388-36f8-47a2-b012-61f1083b80e7"
+				"url" : "//v2.dressformer.com/geometry/e748f388-36f8-47a2-b012-61f1083b80e7"
 			}
 		},
 		

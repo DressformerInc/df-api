@@ -17,7 +17,7 @@ type GarmentScheme struct {
 	Gid      string `gorethink:"gid,omitempty"       json:"gid,omitempty"`
 	Name     string `gorethink:"name,omitempty"      json:"name,omitempty"`
 	SizeName string `gorethink:"size_name,omitempty" json:"size_name,omitempty"`
-	Sizes    []Size `gorethink:"sizes,omitempty"     json:"sizes,,omitempty"`
+	Sizes    []Size `gorethink:"sizes,omitempty"     json:"sizes,omitempty"`
 	DummyId  string `gorethink:"dummy_id,omitempty"  json:"dummy_id,omitempty"`
 
 	Assets struct {

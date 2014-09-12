@@ -15,10 +15,10 @@ func (*User) Construct(args ...interface{}) interface{} {
 }
 
 func (this *User) Find(u *models.User, enc encoder.Encoder) (int, []byte) {
-	user := u.Find(nil)
-	if user == nil {
-		return http.StatusOK, encoder.Must(enc.Encode(struct{}{}))
-	}
+	// user := u.Find(nil)
+	// if user == nil {
+	// 	return http.StatusOK, encoder.Must(enc.Encode(struct{}{}))
+	// }
 
-	return http.StatusOK, encoder.Must(enc.Encode(user))
+	return http.StatusOK, encoder.Must(enc.Encode(u.Object))
 }

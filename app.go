@@ -8,6 +8,7 @@ import (
 	"github.com/3d0c/binding"
 	"github.com/3d0c/martini-contrib/config"
 	"github.com/go-martini/martini"
+	"github.com/gorilla/securecookie"
 	"github.com/martini-contrib/encoder"
 	"log"
 	"net/http"
@@ -24,25 +25,20 @@ func main() {
 	m := martini.New()
 	route := martini.NewRouter()
 
+	m.Map(securecookie.New(AppConfig.HashKey(), AppConfig.BlockKey()))
+
 	m.Use(func(c martini.Context, w http.ResponseWriter) {
 		c.MapTo(encoder.JsonEncoder{PrettyPrint: true}, (*encoder.Encoder)(nil))
 		w.Header().Set("Content-Type", "application/json")
 	})
 
-	m.Use(func(w http.ResponseWriter, req *http.Request) {
-		log.Println(req.Method, req.RequestURI)
+	m.Use(LogHandler)
+	m.Use(CorsHandler)
+	m.Use(TokenHandler)
 
-		if origin := req.Header.Get("Origin"); origin != "" {
-			w.Header().Add("Access-Control-Allow-Origin", origin)
-		} else {
-			w.Header().Add("Access-Control-Allow-Origin", "*")
-		}
-
-		w.Header().Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-		w.Header().Add("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, X-Requested-With")
-		w.Header().Add("Cache-Control", "max-age=2592000")
-		w.Header().Add("Pragma", "public")
-		w.Header().Add("Cache-Control", "public")
+	// Creates user model for each request
+	m.Use(func(c martini.Context, token Token) {
+		c.Map((&models.User{}).Construct(token))
 	})
 
 	route.Options("/**")
@@ -50,7 +46,6 @@ func main() {
 	// User
 
 	route.Get("/user",
-		construct(&models.User{}),
 		construct(&ctrl.User{}),
 		(*ctrl.User).Find,
 	)
@@ -60,13 +55,11 @@ func main() {
 	route.Get("/garments",
 		binding.Form(models.URLOptionsScheme{}),
 		ErrorHandler,
-		construct(&models.User{}),
 		construct(&ctrl.Garment{}),
 		(*ctrl.Garment).FindAll,
 	)
 
 	route.Get("/garments/:id",
-		construct(&models.User{}),
 		construct(&ctrl.Garment{}),
 		(*ctrl.Garment).Find,
 	)
@@ -74,7 +67,6 @@ func main() {
 	route.Post("/garments",
 		binding.Json(models.GarmentScheme{}),
 		ErrorHandler,
-		construct(&models.User{}),
 		construct(&ctrl.Garment{}),
 		(*ctrl.Garment).Create,
 	)
@@ -82,14 +74,12 @@ func main() {
 	route.Put("/garments/:id",
 		binding.Json(models.GarmentScheme{}),
 		ErrorHandler,
-		construct(&models.User{}),
 		construct(&ctrl.Garment{}),
 		(*ctrl.Garment).Put,
 	)
 
 	route.Delete(
 		"/garments/:id",
-		construct(&models.User{}),
 		construct(&ctrl.Garment{}),
 		(*ctrl.Garment).Remove,
 	)
@@ -99,13 +89,11 @@ func main() {
 	route.Get("/dummies",
 		binding.Form(models.URLOptionsScheme{}),
 		ErrorHandler,
-		construct(&models.User{}),
 		construct(&ctrl.Dummy{}),
 		(*ctrl.Dummy).FindAll,
 	)
 
 	route.Get("/dummies/:id",
-		construct(&models.User{}),
 		construct(&ctrl.Dummy{}),
 		(*ctrl.Dummy).Find,
 	)
@@ -113,7 +101,6 @@ func main() {
 	route.Post("/dummies",
 		binding.Json(models.DummyScheme{}),
 		ErrorHandler,
-		construct(&models.User{}),
 		construct(&ctrl.Dummy{}),
 		(*ctrl.Dummy).Create,
 	)
@@ -121,13 +108,11 @@ func main() {
 	route.Put("/dummies/:id",
 		binding.Json(models.DummyScheme{}),
 		ErrorHandler,
-		construct(&models.User{}),
 		construct(&ctrl.Dummy{}),
 		(*ctrl.Dummy).Put,
 	)
 
 	route.Delete("/dummies/:id",
-		construct(&models.User{}),
 		construct(&ctrl.Dummy{}),
 		(*ctrl.Dummy).Remove,
 	)
@@ -147,14 +132,15 @@ func main() {
 	}
 }
 
+// @weird args... accumulates values, on append
 func construct(obj interface{}, args ...interface{}) martini.Handler {
 	return func(ctx martini.Context, r *http.Request) {
 		switch t := obj.(type) {
 		case models.Model:
-			ctx.Map(obj.(models.Model).Construct(args))
+			ctx.Map(obj.(models.Model).Construct(args...))
 
 		case ctrl.Controller:
-			ctx.Map(obj.(ctrl.Controller).Construct(args))
+			ctx.Map(obj.(ctrl.Controller).Construct(args...))
 
 		default:
 			panic(fmt.Sprintln("Unexpected type:", t))

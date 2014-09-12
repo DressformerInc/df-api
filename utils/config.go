@@ -12,6 +12,8 @@ type ConfigScheme struct {
 		HttpsOn  string `json:"https_on"`
 		SSLCert  string `json:"ssl_cert"`
 		SSLKey   string `json:"ssl_key"`
+		HashKey  string `json:"hash_key"`
+		BlockKey string `json:"block_key"`
 	} `json:"application"`
 
 	Endpoints struct {
@@ -42,4 +44,20 @@ func (this *ConfigScheme) ApiUrl() string {
 
 func (this *ConfigScheme) AssetsUrl() string {
 	return this.Endpoints.Assets
+}
+
+func (this *ConfigScheme) HashKey() []byte {
+	if this.App.HashKey == "" {
+		return nil
+	}
+
+	return []byte(this.App.HashKey)
+}
+
+func (this *ConfigScheme) BlockKey() []byte {
+	if this.App.BlockKey == "" {
+		return nil
+	}
+
+	return []byte(this.App.BlockKey)
 }

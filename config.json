@@ -3,7 +3,9 @@
         "listen_on" : ":5500",
         "https_on"  : ":5443",
         "ssl_cert"  : "./cert.pem",
-        "ssl_key"   : "./key.pem"
+        "ssl_key"   : "./key.pem",
+        "hash_key"  : "XdBQ2pFeU16UTFOamM0T1RBPXx0tHzyrevevyfQj4S5ys8vSTRjqqd7",
+        "block_key" : ""
     },
 
     "endpoints"  : {
