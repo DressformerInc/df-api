@@ -2,13 +2,19 @@ package models
 
 import (
 	. "df/api/utils"
+	"errors"
 	r "github.com/dancannon/gorethink"
 	"log"
 )
 
+const H_LEN = 10
+
 type UserScheme struct {
-	Dummy *DummyScheme `json:"dummy,omitempty"`
-	Name  string       `gorethink:"name,omitempty"  json:"name,omitempty"`
+	Id      string           `gorethink:"id,omitempty"      json:"-"`
+	Token   string           `gorethink:"token,omitempty"   json:"-"`
+	Dummy   *DummyScheme     `json:"dummy,omitempty"`
+	Name    string           `gorethink:"name,omitempty"    json:"name,omitempty"`
+	History []*GarmentScheme `gorethink:"history,omitempty" json:"history,omitempty"`
 }
 
 type User struct {
@@ -27,7 +33,10 @@ func (*User) Construct(args ...interface{}) interface{} {
 	log.Println("args:", args)
 
 	if len(args) > 0 {
-		user.Object = user.Find(args[0])
+		if user.Object = user.constructFrom(args[0]); user.Object == nil {
+			log.Println("Unexpected error, unable to proceed. Error: user.Object is nil")
+			return nil
+		}
 	}
 
 	if user.dummy != nil {
@@ -35,6 +44,31 @@ func (*User) Construct(args ...interface{}) interface{} {
 	}
 
 	return user
+}
+
+func (this *User) constructFrom(args ...interface{}) *UserScheme {
+	var i interface{}
+
+	if len(args) > 0 {
+		i = args[0]
+	}
+
+	switch t := i.(type) {
+	case Token:
+		// if the token has been restored from cookie, we've already have this user, so find it
+		if i.(Token).IsRestored {
+			return this.Find(i.(Token))
+		}
+
+		// if not, return newly created one
+		u, _ := this.Create(UserScheme{Token: i.(Token).Get()})
+		return u
+
+	default:
+		log.Println("Unexpected type:", t)
+	}
+
+	return nil
 }
 
 func (this *User) Find(args ...interface{}) *UserScheme {
@@ -51,25 +85,98 @@ func (this *User) Find(args ...interface{}) *UserScheme {
 		token := i.(Token).Get()
 		log.Println("find by token, ", token)
 
-		rows, err := r.Db("dressformer").Table("tokens").Get(token).Merge(map[string]interface{}{
-			"user": r.Db("dressformer").Table("users").Get(r.Row.Field("user_id")),
-		}).Run(session())
+		rows, err := this.GetAllByIndex("token", token).Run(session())
 		if err != nil {
-			log.Println("Error finding user object by token. Error:", err)
-			return user
+			log.Println("Unable to fetch cursor for index token:", token, "Error:", err)
+			return nil
 		}
 
-		result := &struct {
-			User *UserScheme `gorethink:"user,omitempty"`
-		}{&UserScheme{}}
-
-		if err = rows.One(&result); err != nil {
+		if err = rows.One(&user); err != nil {
 			log.Println("Error getting data. Error:", err)
-			return user
+			return nil
 		}
-		log.Println("result:", result.User)
-		user = result.User
 	}
+
+	log.Println("result:", user)
 
 	return user
 }
+
+func (this *User) Put(payload interface{}) (*UserScheme, error) {
+	id := this.Object.Id
+
+	log.Println("Updating:", id, "with:", payload)
+
+	result, err := this.Get(id).Update(payload, r.UpdateOpts{ReturnVals: true}).Run(session())
+	if err != nil {
+		log.Println("Error updating:", id, "with data:", payload, "error:", err)
+		return nil, errors.New("Wrong data")
+	}
+
+	response := &r.WriteResponse{NewValue: &UserScheme{}}
+
+	if err = result.One(response); err != nil {
+		log.Println("Unable to iterate cursor:", err)
+		return nil, errors.New("Internal server error")
+	}
+
+	if response.NewValue == nil {
+		return nil, errors.New("Wrong data")
+	}
+
+	return response.NewValue.(*UserScheme), nil
+}
+
+func (this *User) Create(payload UserScheme) (*UserScheme, error) {
+	result, err := this.Insert(payload, r.InsertOpts{ReturnVals: true}).Run(session())
+	if err != nil {
+		log.Println("Error inserting data:", err)
+		return nil, errors.New("Internal server error")
+	}
+
+	response := &r.WriteResponse{NewValue: &UserScheme{}}
+
+	if err = result.One(response); err != nil {
+		log.Println("Unable to iterate cursor:", err)
+		return nil, errors.New("Internal server error")
+	}
+
+	log.Println("inserted :", response.Inserted)
+	log.Println("new_val:", response.NewValue)
+
+	return response.NewValue.(*UserScheme), nil
+}
+
+func (this *User) UpdateHistory(g *GarmentScheme) {
+	history := []*GarmentScheme{}
+
+	history = append(history, g)
+	for i, _ := range this.Object.History {
+		if i == H_LEN-1 {
+			break
+		}
+
+		if this.Object.History[i].Id == g.Id {
+			continue
+		}
+
+		history = append(history, this.Object.History[i])
+	}
+
+	this.Object.History = history
+	this.Put(this.Object)
+}
+
+// Just an example of usage subqueries in RethinkDB
+//
+//	rows, err := r.Db("dressformer").Table("tokens").Get(token).Merge(map[string]interface{}{
+//		"user": r.Db("dressformer").Table("users").Get(r.Row.Field("user_id")),
+//	}).Run(session())
+//	if err != nil {
+//		log.Println("Error finding user object by token. Error:", err)
+//		return user
+//	}
+//
+//	result := &struct {
+//		User *UserScheme `gorethink:"user,omitempty"`
+//	}{&UserScheme{}}

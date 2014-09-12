@@ -26,6 +26,8 @@ func (this *Garment) Find(u *models.User, enc encoder.Encoder, params martini.Pa
 		return http.StatusOK, encoder.Must(enc.Encode(struct{}{}))
 	}
 
+	u.UpdateHistory(result)
+
 	return http.StatusOK, encoder.Must(enc.Encode(result))
 }
 

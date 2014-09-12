@@ -27,7 +27,7 @@ func LogHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func TokenHandler(w http.ResponseWriter, r *http.Request, sc *securecookie.SecureCookie, c martini.Context) {
-	this := Token{}
+	this := Token{IsRestored: false}
 
 	if cookie, err := r.Cookie("df-token"); err != nil {
 		if u4, err := uuid.NewV4(); err != nil {
@@ -51,6 +51,7 @@ func TokenHandler(w http.ResponseWriter, r *http.Request, sc *securecookie.Secur
 	} else {
 		if err := sc.Decode("df-token", cookie.Value, &this.payload); err == nil {
 			log.Println("df-token:", this.payload)
+			this.IsRestored = true
 		}
 	}
 
@@ -58,7 +59,8 @@ func TokenHandler(w http.ResponseWriter, r *http.Request, sc *securecookie.Secur
 }
 
 type Token struct {
-	payload string
+	payload    string
+	IsRestored bool
 }
 
 func (this Token) Get() string {
