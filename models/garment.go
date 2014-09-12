@@ -21,11 +21,12 @@ type GarmentScheme struct {
 	DummyId  string `gorethink:"dummy_id,omitempty"  json:"dummy_id,omitempty"`
 
 	Assets struct {
-		Geometry Source `gorethink:"geometry,omitempty" json:"geometry,omitempty"`
-		Mtl      Source `gorethink:"mtl,omitempty"      json:"mtl,omitempty"`
-		Diffuse  Source `gorethink:"diffuse,omitempty"  json:"diffuse,omitempty"`
-		Normal   Source `gorethink:"normal,omitempty"   json:"normal,omitempty"`
-		Specular Source `gorethink:"specular,omitempty" json:"specular,omitempty"`
+		Geometry    Source `gorethink:"geometry,omitempty"    json:"geometry,omitempty"`
+		Mtl         Source `gorethink:"mtl,omitempty"         json:"mtl,omitempty"`
+		Diffuse     Source `gorethink:"diffuse,omitempty"     json:"diffuse,omitempty"`
+		Normal      Source `gorethink:"normal,omitempty"      json:"normal,omitempty"`
+		Specular    Source `gorethink:"specular,omitempty"    json:"specular,omitempty"`
+		Placeholder Source `gorethink:"placeholder,omitempty" json:"placeholder,omitempty"`
 	} `gorethink:"assets,omitempty" json:"assets,omitempty"`
 }
 
@@ -60,6 +61,7 @@ func (this *Garment) Find(id string) *GarmentScheme {
 	url(&result.Assets.Diffuse, "image")
 	url(&result.Assets.Normal, "image")
 	url(&result.Assets.Specular, "image")
+	url(&result.Assets.Placeholder, "image")
 
 	return result
 }
@@ -92,6 +94,7 @@ func (this *Garment) FindAll(ids []string, opts URLOptionsScheme) []GarmentSchem
 		url(&result[idx].Assets.Diffuse, "image")
 		url(&result[idx].Assets.Normal, "image")
 		url(&result[idx].Assets.Specular, "image")
+		url(&result[idx].Assets.Placeholder, "image")
 	}
 
 	return result
