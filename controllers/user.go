@@ -15,5 +15,10 @@ func (*User) Construct(args ...interface{}) interface{} {
 }
 
 func (this *User) Find(u *models.User, r render.Render) {
+	if u.Object == nil {
+		r.JSON(http.StatusOK, struct{}{})
+		return
+	}
+
 	r.JSON(http.StatusOK, u.Object)
 }
