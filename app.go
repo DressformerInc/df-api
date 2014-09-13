@@ -9,7 +9,7 @@ import (
 	"github.com/3d0c/martini-contrib/config"
 	"github.com/go-martini/martini"
 	"github.com/gorilla/securecookie"
-	"github.com/martini-contrib/encoder"
+	"github.com/martini-contrib/render"
 	"log"
 	"net/http"
 )
@@ -27,10 +27,9 @@ func main() {
 
 	m.Map(securecookie.New(AppConfig.HashKey(), AppConfig.BlockKey()))
 
-	m.Use(func(c martini.Context, w http.ResponseWriter) {
-		c.MapTo(encoder.JsonEncoder{PrettyPrint: true}, (*encoder.Encoder)(nil))
-		w.Header().Set("Content-Type", "application/json")
-	})
+	m.Use(render.Renderer(render.Options{
+		IndentJSON: true,
+	}))
 
 	m.Use(LogHandler)
 	m.Use(CorsHandler)

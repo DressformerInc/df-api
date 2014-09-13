@@ -3,7 +3,7 @@ package controllers
 import (
 	"df/api/models"
 	"github.com/go-martini/martini"
-	"github.com/martini-contrib/encoder"
+	"github.com/martini-contrib/render"
 	"log"
 	"net/http"
 	"regexp"
@@ -20,18 +20,19 @@ func (*Garment) Construct(args ...interface{}) interface{} {
 	}
 }
 
-func (this *Garment) Find(u *models.User, enc encoder.Encoder, params martini.Params) (int, []byte) {
+func (this *Garment) Find(u *models.User, r render.Render, params martini.Params) {
 	result := this.model.Find(params["id"])
 	if result == nil {
-		return http.StatusOK, encoder.Must(enc.Encode(struct{}{}))
+		r.JSON(http.StatusOK, struct{}{})
+		return
 	}
 
 	u.UpdateHistory(result)
 
-	return http.StatusOK, encoder.Must(enc.Encode(result))
+	r.JSON(http.StatusOK, result)
 }
 
-func (this *Garment) FindAll(opts models.URLOptionsScheme, u *models.User, enc encoder.Encoder, r *http.Request) (int, []byte) {
+func (this *Garment) FindAll(opts models.URLOptionsScheme, u *models.User, r render.Render) {
 	guid := regexp.MustCompile("\b[A-F0-9]{8}(?:-[A-F0-9]{4}){3}-[A-F0-9]{12}\b")
 	ids := make([]string, 0)
 
@@ -49,34 +50,37 @@ func (this *Garment) FindAll(opts models.URLOptionsScheme, u *models.User, enc e
 
 	result := this.model.FindAll(ids, opts)
 
-	return http.StatusOK, encoder.Must(enc.Encode(result))
+	r.JSON(http.StatusOK, result)
 }
 
-func (this *Garment) Create(u *models.User, payload models.GarmentScheme, enc encoder.Encoder) (int, []byte) {
+func (this *Garment) Create(u *models.User, payload models.GarmentScheme, r render.Render) {
 
 	result, err := this.model.Create(payload)
 	if err != nil {
-		return http.StatusBadRequest, []byte{}
+		r.JSON(http.StatusBadRequest, []byte{})
+		return
 	}
 
-	return http.StatusOK, encoder.Must(enc.Encode(result))
+	r.JSON(http.StatusOK, result)
 }
 
-func (this *Garment) Put(u *models.User, payload models.GarmentScheme, enc encoder.Encoder, p martini.Params) (int, []byte) {
+func (this *Garment) Put(u *models.User, payload models.GarmentScheme, r render.Render, p martini.Params) {
 
 	result, err := this.model.Put(p["id"], payload)
 	if err != nil {
-		return http.StatusBadRequest, []byte{}
+		r.JSON(http.StatusBadRequest, []byte{})
+		return
 	}
 
-	return http.StatusOK, encoder.Must(enc.Encode(result))
+	r.JSON(http.StatusOK, result)
 }
 
-func (this *Garment) Remove(u *models.User, enc encoder.Encoder, p martini.Params) (int, []byte) {
+func (this *Garment) Remove(u *models.User, r render.Render, p martini.Params) {
 	err := this.model.Remove(p["id"])
 	if err != nil {
-		return http.StatusBadRequest, []byte{}
+		r.JSON(http.StatusBadRequest, []byte{})
+		return
 	}
 
-	return http.StatusOK, []byte{}
+	r.JSON(http.StatusOK, []byte{})
 }

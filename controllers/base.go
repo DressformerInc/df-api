@@ -15,7 +15,8 @@ func (*BaseController) Construct(args ...interface{}) interface{} {
 	}
 }
 
-func (this *BaseController) Find(u *models.User, enc encoder.Encoder, params martini.Params) (int, []byte) {
-	return http.StatusOK, encoder.Must(enc.Encode(this.model.Find(params["id"])))
+func (this *BaseController) Find(u *models.User, r render.Render, params martini.Params) (int, []byte) {
+	r.JSON(http.StatusOK, this.model.Find(params["id"]))
 }
+
 */

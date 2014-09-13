@@ -2,7 +2,7 @@ package utils
 
 import (
 	"github.com/3d0c/binding"
-	"github.com/martini-contrib/encoder"
+	"github.com/martini-contrib/render"
 	"net/http"
 )
 
@@ -14,20 +14,20 @@ func Err(s string) map[string]string {
 	return map[string]string{"error_msg": s}
 }
 
-func ErrorHandler(errs binding.Errors, w http.ResponseWriter, enc encoder.Encoder) {
+func ErrorHandler(errs binding.Errors, w http.ResponseWriter, r render.Render) {
 	if len(errs) == 0 {
 		return
 	}
 
+	var status int
+
 	if errs.Has(binding.DeserializationError) {
-		w.WriteHeader(http.StatusBadRequest)
+		status = http.StatusBadRequest
 	} else if errs.Has(binding.ContentTypeError) {
-		w.WriteHeader(http.StatusUnsupportedMediaType)
+		status = http.StatusUnsupportedMediaType
 	} else {
-		w.WriteHeader(binding.StatusUnprocessableEntity)
+		status = http.StatusInternalServerError
 	}
 
-	e := ErrorScheme{Items: errs}
-
-	w.Write(encoder.Must(enc.Encode(e)))
+	r.JSON(status, ErrorScheme{Items: errs})
 }
