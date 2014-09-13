@@ -1,9 +1,9 @@
 package utils
 
 import (
+	"code.google.com/p/go-uuid/uuid"
 	"github.com/go-martini/martini"
 	"github.com/gorilla/securecookie"
-	uuid "github.com/nu7hatch/gouuid"
 	"log"
 	"net/http"
 )
@@ -30,24 +30,20 @@ func TokenHandler(w http.ResponseWriter, r *http.Request, sc *securecookie.Secur
 	this := Token{IsRestored: false}
 
 	if cookie, err := r.Cookie("df-token"); err != nil {
-		if u4, err := uuid.NewV4(); err != nil {
-			log.Println("Unable to generate u4:", err)
-		} else {
-			this.payload = u4.String()
-			encoded, err := sc.Encode("df-token", this.payload)
-			if err != nil {
-				log.Println("Encode error:", err)
-				return
-			}
-
-			cookie := &http.Cookie{
-				Name:  "df-token",
-				Value: encoded,
-				Path:  "/",
-			}
-
-			http.SetCookie(w, cookie)
+		this.payload = uuid.New()
+		encoded, err := sc.Encode("df-token", this.payload)
+		if err != nil {
+			log.Println("Encode error:", err)
+			return
 		}
+
+		cookie := &http.Cookie{
+			Name:  "df-token",
+			Value: encoded,
+			Path:  "/",
+		}
+
+		http.SetCookie(w, cookie)
 	} else {
 		if err := sc.Decode("df-token", cookie.Value, &this.payload); err == nil {
 			log.Println("df-token:", this.payload)

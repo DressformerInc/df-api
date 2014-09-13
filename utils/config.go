@@ -1,5 +1,11 @@
 package utils
 
+import (
+	"encoding/json"
+	"io/ioutil"
+	"log"
+)
+
 var AppConfig *ConfigScheme
 
 func init() {
@@ -20,6 +26,28 @@ type ConfigScheme struct {
 		Api    string `json:"api"`
 		Assets string `json:"assets"`
 	} `json:"endpoints"`
+
+	Connections struct {
+		Rethink struct {
+			Spec   string `json:"spec"`
+			DbName string `json:"db_name"`
+		} `json:"rethink"`
+	} `json:"connections"`
+}
+
+var config *ConfigScheme
+
+func InitConfigFrom(file string) {
+	data, err := ioutil.ReadFile(file)
+	if err != nil {
+		log.Println("Unable to read", file, "Error:", err)
+		return
+	}
+
+	err = json.Unmarshal(data, AppConfig)
+	if err != nil {
+		log.Println("Unable to read config.", err)
+	}
 }
 
 func (this *ConfigScheme) ListenOn() string {
@@ -60,4 +88,12 @@ func (this *ConfigScheme) BlockKey() []byte {
 	}
 
 	return []byte(this.App.BlockKey)
+}
+
+func (this *ConfigScheme) RethinkAddress() string {
+	return this.Connections.Rethink.Spec
+}
+
+func (this *ConfigScheme) RethinkDbName() string {
+	return this.Connections.Rethink.DbName
 }
