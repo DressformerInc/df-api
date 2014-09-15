@@ -35,8 +35,6 @@ type ConfigScheme struct {
 	} `json:"connections"`
 }
 
-var config *ConfigScheme
-
 func InitConfigFrom(file string) {
 	data, err := ioutil.ReadFile(file)
 	if err != nil {

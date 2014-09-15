@@ -4,6 +4,7 @@ import (
 	. "df/api/utils"
 	"errors"
 	r "github.com/dancannon/gorethink"
+	enc "github.com/dancannon/gorethink/encoding"
 	"log"
 )
 
@@ -107,34 +108,42 @@ func (this *User) Put(payload interface{}) (*UserScheme, error) {
 
 	log.Println("Updating:", id, "with:", payload)
 
-	result, err := this.Get(id).Update(payload, r.UpdateOpts{ReturnVals: true}).Run(session())
+	result, err := this.Get(id).Update(payload, r.UpdateOpts{ReturnChanges: true}).Run(session())
 	if err != nil {
 		log.Println("Error updating:", id, "with data:", payload, "error:", err)
 		return nil, errors.New("Wrong data")
 	}
 
-	response := &r.WriteResponse{NewValue: &UserScheme{}}
+	response := &r.WriteResponse{}
 
 	if err = result.One(response); err != nil {
 		log.Println("Unable to iterate cursor:", err)
 		return nil, errors.New("Internal server error")
 	}
 
-	if response.NewValue == nil {
-		return nil, errors.New("Wrong data")
+	if len(response.Changes) != 1 {
+		log.Println("Unexpected length of Changes:", len(response.Changes))
+		return nil, errors.New("Internal server error")
 	}
 
-	return response.NewValue.(*UserScheme), nil
+	newval := &UserScheme{}
+
+	if err = enc.Decode(newval, response.Changes[0].NewValue); err != nil {
+		log.Println("Decode error:", err)
+		return nil, errors.New("Internal server error")
+	}
+
+	return newval, nil
 }
 
 func (this *User) Create(payload UserScheme) (*UserScheme, error) {
-	result, err := this.Insert(payload, r.InsertOpts{ReturnVals: true}).Run(session())
+	result, err := this.Insert(payload, r.InsertOpts{ReturnChanges: true}).Run(session())
 	if err != nil {
 		log.Println("Error inserting data:", err)
 		return nil, errors.New("Internal server error")
 	}
 
-	response := &r.WriteResponse{NewValue: &UserScheme{}}
+	response := &r.WriteResponse{}
 
 	if err = result.One(response); err != nil {
 		log.Println("Unable to iterate cursor:", err)
@@ -142,9 +151,20 @@ func (this *User) Create(payload UserScheme) (*UserScheme, error) {
 	}
 
 	log.Println("inserted :", response.Inserted)
-	log.Println("new_val:", response.NewValue)
 
-	return response.NewValue.(*UserScheme), nil
+	if len(response.Changes) != 1 {
+		log.Println("Unexpected length of Changes:", len(response.Changes))
+		return nil, errors.New("Internal server error")
+	}
+
+	newval := &UserScheme{}
+
+	if err = enc.Decode(newval, response.Changes[0].NewValue); err != nil {
+		log.Println("Decode error:", err)
+		return nil, errors.New("Internal server error")
+	}
+
+	return newval, nil
 }
 
 func (this *User) UpdateHistory(g *GarmentScheme) {
