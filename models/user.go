@@ -108,7 +108,7 @@ func (this *User) Put(payload interface{}) (*UserScheme, error) {
 
 	log.Println("Updating:", id, "with:", payload)
 
-	result, err := this.Get(id).Update(payload, r.UpdateOpts{ReturnChanges: true}).Run(session())
+	result, err := this.Get(id).Update(payload, r.UpdateOpts{ReturnChanges: true, Durability: "soft"}).Run(session())
 	if err != nil {
 		log.Println("Error updating:", id, "with data:", payload, "error:", err)
 		return nil, errors.New("Wrong data")
@@ -137,7 +137,7 @@ func (this *User) Put(payload interface{}) (*UserScheme, error) {
 }
 
 func (this *User) Create(payload UserScheme) (*UserScheme, error) {
-	result, err := this.Insert(payload, r.InsertOpts{ReturnChanges: true}).Run(session())
+	result, err := this.Insert(payload, r.InsertOpts{ReturnChanges: true, Durability: "soft"}).Run(session())
 	if err != nil {
 		log.Println("Error inserting data:", err)
 		return nil, errors.New("Internal server error")

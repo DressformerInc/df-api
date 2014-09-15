@@ -39,6 +39,8 @@ func main() {
 
 	route.Options("/**")
 
+	route.Get("/test", func() (int, []byte) { return 200, []byte{} })
+
 	// User
 
 	route.Get("/user",
@@ -118,12 +120,13 @@ func main() {
 	log.Printf("Waiting for connections on %v...\n", AppConfig.ListenOn())
 
 	go func() {
-		if err := http.ListenAndServe(AppConfig.ListenOn(), m); err != nil {
-			log.Fatal(err)
+		if err := http.ListenAndServeTLS(AppConfig.HttpsOn(), AppConfig.SSLCert(), AppConfig.SSLKey(), m); err != nil {
+			log.Println(err)
 		}
+
 	}()
 
-	if err := http.ListenAndServeTLS(AppConfig.HttpsOn(), AppConfig.SSLCert(), AppConfig.SSLKey(), m); err != nil {
+	if err := http.ListenAndServe(AppConfig.ListenOn(), m); err != nil {
 		log.Fatal(err)
 	}
 }

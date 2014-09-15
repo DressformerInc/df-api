@@ -141,7 +141,7 @@ func (this *Garment) Create(payload GarmentScheme) (*GarmentScheme, error) {
 }
 
 func (this *Garment) Put(id string, payload GarmentScheme) (*GarmentScheme, error) {
-	result, err := this.Get(id).Update(payload, r.UpdateOpts{ReturnChanges: true}).Run(session())
+	result, err := this.Get(id).Update(payload, r.UpdateOpts{ReturnChanges: true, Durability: "soft"}).Run(session())
 	if err != nil {
 		log.Println("Error updating:", id, "with data:", payload, "error:", err)
 		return nil, errors.New("Wrong data")
