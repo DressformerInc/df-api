@@ -10,7 +10,7 @@
 
     "endpoints"  : {
         "api"    : "//localhost:5000",
-        "assets" : "//localhost:6500"
+        "assets" : "//v2.dressformer.com/assets"
     },
 
     "connections"   : {
