@@ -6,3 +6,5 @@ deploy.lin
 api
 public
 config.json
+public/
+public

@@ -2,9 +2,9 @@
     <div id="viewport" class="dfw_viewport"></div>
     <div class="dfwv_history">
         <div class="dfwv_history_back" title="Return to previous view">
-            <span class="df_icon">&#xf053;</span></div>
-        <div class="dfwv_history_forward" title="Go to next view"><span
-                    class="df_icon">&#xf054;</span></div>
+            <span class="df_icon">&#xf030;</span></div>
+<!--         <div class="dfwv_history_forward" title="Go to next view"><span
+                    class="df_icon">&#xf054;</span></div> -->
     </div>
     <div class="dfwv_control dfwvc_up"><span class="df_icon">&#xf106;</span></div>
     <div class="dfwv_control dfwvc_down"><span class="df_icon">&#xf107;</span></div>
@@ -36,6 +36,11 @@
 </div>
 
     <script>
-        var Dressformer = {{ . }};;
+        var Dressformer = {
+            user: {{ .User }},
+            garment: {
+                id: {{ .Id }}
+            }            
+        };
         console.log('Dressformer', Dressformer);
     </script>

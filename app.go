@@ -48,15 +48,43 @@ func main() {
 	route.Options("/**")
 
 	// Boot
-
+	type Params struct {
+		Id   string
+		User *models.UserScheme
+	}
 	route.Get("/boot/ext", func(user *models.User, r render.Render) {
-		r.HTML(200, "ext", user.Object)
+		params := &Params{
+			Id:   "",
+			User: user.Object,
+		}
+
+		r.HTML(200, "ext", params)
 	})
 
-	route.Get("/boot", func(render render.Render) {
-		render.HTML(200, "index", nil)
+	route.Get("/boot/ext/:id", func(user *models.User, r render.Render, p martini.Params) {
+		params := &Params{
+			Id:   p["id"],
+			User: user.Object,
+		}
+
+		r.HTML(200, "ext", params)
 	})
 
+	route.Get("/boot", func(user *models.User, render render.Render) {
+		params := &Params{
+			Id:   "",
+			User: user.Object,
+		}
+		render.HTML(200, "index", params)
+	})
+
+	route.Get("/boot/:id", func(user *models.User, render render.Render, p martini.Params) {
+		params := &Params{
+			Id:   p["id"],
+			User: user.Object,
+		}
+		render.HTML(200, "index", params)
+	})
 	// User
 
 	route.Get("/user",

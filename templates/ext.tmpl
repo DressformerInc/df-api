@@ -138,10 +138,15 @@
             </div>            
     </div>
 </div>
-
     <script>
-        var Dressformer = {{ . }};
-            Dressformer.history =[  {
+
+        var Dressformer = {
+            user: {{ .User }},
+            garment: {
+                id: {{ .Id }}
+            }            
+        };
+            Dressformer.user.history =[  {
                             id: '75df08e3-a053-4cfe-97f9-d8c7f1af1393',
                             placeholder: ''
                         },
