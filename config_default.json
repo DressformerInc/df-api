@@ -1,0 +1,24 @@
+{
+    "application" : {
+        "listen_on" : ":5500",
+        "https_on"  : ":5443",
+        "ssl_cert"  : "./cert.pem",
+        "ssl_key"   : "./key.pem",
+        "hash_key"  : "XdBQ2pFeU16UTFOamM0T1RBPXx0tHzyrevevyfQj4S5ys8vSTRjqqd7",
+        "block_key" : ""
+    },
+
+    "endpoints"  : {
+        "api"    : "//localhost:5000",
+        "assets" : "//v2.dressformer.com/assets"
+    },
+
+    "connections"   : {
+    	"rethink" : {
+            "spec"    : "localhost:28015",
+            "db_name" : "dressformer",
+            "default" : true,
+            "type"    : "rethinkdb"
+        }
+    }
+}

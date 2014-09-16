@@ -27,10 +27,10 @@ func main() {
 	m.Map(securecookie.New(AppConfig.HashKey(), AppConfig.BlockKey()))
 
 	m.Use(render.Renderer(render.Options{
-		Directory:  "templates",                // Specify what path to load the templates from.
-		Layout:     "layout",                   // Specify a layout template. Layouts can call {{ yield }} to render the current template.
-		Extensions: []string{".tmpl", ".html"}, // Specify extensions to load for templates.
-		Charset:    "UTF-8",                    // Sets encoding for json and html content-types. Default is "UTF-8".
+		Directory:  "templates",
+		Layout:     "layout",
+		Extensions: []string{".tmpl", ".html"},
+		Charset:    "UTF-8",
 		IndentJSON: true,
 	}))
 
@@ -49,16 +49,7 @@ func main() {
 
 	// Boot
 
-	// route.Group("/boot", func(router martini.Router) {
-	// 	router.Get("/:id?", func(render render.Render, params martini.Params) {
-	// 		render.HTML(200, "index", nil)
-	// 	})
-	// })
-
 	route.Get("/boot/ext", func(user *models.User, r render.Render) {
-		// userJson, _ := json.Marshal(user.Object)
-		// log.Println("user:", userJson)
-		// os.Stdout.Write(userJson)
 		r.HTML(200, "ext", user.Object)
 	})
 
