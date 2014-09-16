@@ -4,6 +4,7 @@ import (
 	ctrl "df/api/controllers"
 	"df/api/models"
 	. "df/api/utils"
+	// "encoding/json"
 	"fmt"
 	"github.com/3d0c/binding"
 	"github.com/go-martini/martini"
@@ -11,6 +12,7 @@ import (
 	"github.com/martini-contrib/render"
 	"log"
 	"net/http"
+	// "os"
 )
 
 func init() {
@@ -25,8 +27,14 @@ func main() {
 	m.Map(securecookie.New(AppConfig.HashKey(), AppConfig.BlockKey()))
 
 	m.Use(render.Renderer(render.Options{
+		Directory:  "templates",
+		Layout:     "layout",
+		Extensions: []string{".tmpl", ".html"},
+		Charset:    "UTF-8",
 		IndentJSON: true,
 	}))
+
+	m.Use(martini.Static("public"))
 
 	m.Use(LogHandler)
 	m.Use(CorsHandler)
@@ -39,7 +47,15 @@ func main() {
 
 	route.Options("/**")
 
-	route.Get("/test", func() (int, []byte) { return 200, []byte{} })
+	// Boot
+
+	route.Get("/boot/ext", func(user *models.User, r render.Render) {
+		r.HTML(200, "ext", user.Object)
+	})
+
+	route.Get("/boot", func(render render.Render) {
+		render.HTML(200, "index", nil)
+	})
 
 	// User
 
