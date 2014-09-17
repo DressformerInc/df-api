@@ -53,44 +53,27 @@ func main() {
 		r.HTML(200, "tryon", nil)
 	})
 
-	// Boot
-	type Params struct {
-		Id   string
-		User *models.UserScheme
-	}
-	route.Get("/widget/ext", func(user *models.User, r render.Render) {
-		params := &Params{
-			Id:   "",
-			User: user.Object,
-		}
+	// Widget
 
-		r.HTML(200, "widget-ext", params)
-	})
+	route.Get("/widget/ext",
+		construct(&ctrl.Widget{}, "widget-ext"),
+		(*ctrl.Widget).Get,
+	)
 
-	route.Get("/widget/ext/:id", func(user *models.User, r render.Render, p martini.Params) {
-		params := &Params{
-			Id:   p["id"],
-			User: user.Object,
-		}
+	route.Get("/widget/ext/:id",
+		construct(&ctrl.Widget{}, "widget-ext"),
+		(*ctrl.Widget).Get,
+	)
 
-		r.HTML(200, "widget-ext", params)
-	})
+	route.Get("/widget",
+		construct(&ctrl.Widget{}, "widget"),
+		(*ctrl.Widget).Get,
+	)
 
-	route.Get("/widget", func(user *models.User, render render.Render) {
-		params := &Params{
-			Id:   "",
-			User: user.Object,
-		}
-		render.HTML(200, "widget", params)
-	})
-
-	route.Get("/widget/:id", func(user *models.User, render render.Render, p martini.Params) {
-		params := &Params{
-			Id:   p["id"],
-			User: user.Object,
-		}
-		render.HTML(200, "widget", params)
-	})
+	route.Get("/widget/:id",
+		construct(&ctrl.Widget{}, "widget"),
+		(*ctrl.Widget).Get,
+	)
 
 	// User
 
