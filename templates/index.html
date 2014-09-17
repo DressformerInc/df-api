@@ -16,13 +16,23 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="//code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
 
+    <style>
+    ul {
+        list-style: none;
+    }
+    </style>
+
 </head>
 
 <body>
 
     <ul>
         {{range .Garments}}
-        <li class="garment"><a href="//v2.dressformer.com/widget/{{.Id}}">{{.Id}}</a><img src="{{.Assets.Placeholder.Url}}"></li>
+        <li class="garment">
+        <br/>
+        <a href="//v2.dressformer.com/widget/{{.Id}}">{{.Id}}</a>
+        <br/>
+        <img src="{{.Assets.Placeholder.Url}}?scale=200x"></li>
         {{end}}
     </ul>
 
