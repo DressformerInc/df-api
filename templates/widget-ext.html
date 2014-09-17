@@ -221,12 +221,25 @@
                     <span class="df_icon">&#xf00c;</span>
                 </div>
             </div>
+
+            {{ range .User.History }}
+            <div class="dfrp_garment" 
+                data-garment="{{.Id}}" 
+                style="background-image: url(//v2.dressformer.com/assets/image/{{.Assets.Placeholder.Id}});"                
+                title="">
+                <div class="dfrpg_select" style="display: none;">
+                    <span class="df_icon">&#xf00c;</span>
+                </div>
+            </div>
+            {{ end }}            
+                
         </div>
     </div>
 
 
     <script>
         var Dressformer = {
+            test: {{ .User.History}},
             user: {{ .User }},
             garment: {
                 id: {{ .Id }}
