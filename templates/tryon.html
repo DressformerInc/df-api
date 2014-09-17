@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="Dressformer Widget Testing Page">
+    <meta name="keywords" content="[[*keywords]]" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Dressformer</title>
+
+    <link rel="icon" type="image/png" href="img/favicon.png" />
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" id="css_theme" href="css/light.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
+
+</head>
+
+
+<body>
+
+    <div class="bg_hint" id="bg_hint">Playground</div>
+    <iframe scrolling="auto" class="bg_iframe" id="bg_iframe"></iframe>
+    <iframe src="http://v2.dressformer.com/widget/ext/75df08e3-a053-4cfe-97f9-d8c7f1af1393" scrolling="auto" class="widget_iframe" id="widget_iframe"></iframe>
+    <div class="url_panel" id="url_panel">Enter site URL:
+        <form action="javascript:setSite();" name="bg_form">
+            <input type="url" id="bg_input" class="df_input_text" placeholder="http://..." size="50">
+            <input type="submit" value="&#xf061;&nbsp; Try On!" class="df_input_button">
+        </form>
+
+        <div class="fd_theme_swap" id="fd_theme_swap">
+            <span class="df_icon">&#xf042;</span>
+            &nbsp; Swap Color Theme
+        </div>
+    </div>
+
+    <div class="dfw_btn_drag" id="dfw_btn_dragger">
+        <span class="df_icon">&#xf047;</span>
+        <div class="df_card_btn">Try On!</div>
+    </div>
+
+    <script>
+      function setSite () {
+          var URLvalue = $('#bg_input').val();
+            
+          if (URLvalue){
+            $('#bg_iframe').attr("src", URLvalue).css('display','block');            
+          }
+      }
+
+      $(function() {
+          var darkTheme = false;
+          $( '#dfw_btn_dragger' ).draggable();
+
+          $('#fd_theme_swap').on('click', function  () {
+              if ( darkTheme ) {
+                  $( '#css_theme' ).attr( 'href', 'css/light.css' );                
+                  $( 'body' ).css( 'background-image', 'url(img/bg_tile.png)' );
+                  $( '#bg_hint' ).css( 'background-color', 'rgba(256, 256, 256, 0.6);' );
+                  $( '#fd_theme_swap' ).css( {
+                    'background-color': '#fff',
+                    'color': '#292929'
+                  });
+              } else {                
+                  $('#css_theme' ).attr( 'href', 'css/dark.css' );                
+                  $('body' ).css( 'background-image', 'url(img/bg_tile_dark.png)' );
+                  $('#bg_hint' ).css( 'background-color', 'rgba(0, 0, 0, 0.4);' );
+                  $( '#fd_theme_swap' ).css( {
+                    'background-color': '#292929',
+                    'color': '#fff'
+                  });
+              }
+              darkTheme = !darkTheme;
+          });
+
+          $('.df_card_btn').on('click', function () {
+              $('#widget_iframe').show();
+          });
+
+      });
+    </script>
+
+</body>
+
+</html>

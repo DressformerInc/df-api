@@ -49,8 +49,8 @@ func main() {
 
 	// Index
 
-	route.Get("/", func(r render.Render) {
-		r.HTML(200, "index", nil)
+	route.Get("/tryon", func(r render.Render) {
+		r.HTML(200, "tryon", nil)
 	})
 
 	// Boot
