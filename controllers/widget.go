@@ -4,6 +4,7 @@ import (
 	"df/api/models"
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/render"
+	"time"
 )
 
 type Widget struct {
@@ -23,10 +24,12 @@ func (*Widget) Construct(args ...interface{}) interface{} {
 
 func (this *Widget) Get(u *models.User, r render.Render, p martini.Params) {
 	r.HTML(200, this.Name, struct {
-		Id   string
-		User *models.UserScheme
+		Id      string
+		User    *models.UserScheme
+		Version int64
 	}{
 		p["id"],
 		u.Object,
+		time.Now().Unix(),
 	})
 }
