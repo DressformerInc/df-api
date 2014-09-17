@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="Dressformer Widget Testing Page">
+    <meta name="keywords" content="[[*keywords]]" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Dressformer</title>
+
+    <link rel="icon" type="image/png" href="img/favicon.png" />
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" id="css_theme" href="css/light.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
+
+</head>
+
+<body>
+
+    <ul>
+        {{range .Garments}}
+        <li class="garment"><a href="//v2.dressformer.com/widget/{{.Id}}">{{.Id}}</a><img src="{{.Assets.Placeholder.Url}}"></li>
+        {{end}}
+    </ul>
+
+</body>
+</html>

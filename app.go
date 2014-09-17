@@ -49,6 +49,12 @@ func main() {
 
 	// Index
 
+	route.Get("/",
+		construct(&ctrl.Widget{}),
+		construct(&models.Garment{}),
+		(*ctrl.Widget).Index,
+	)
+
 	route.Get("/tryon", func(r render.Render) {
 		r.HTML(200, "tryon", nil)
 	})

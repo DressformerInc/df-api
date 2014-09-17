@@ -4,7 +4,6 @@ import (
 	"df/api/models"
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/render"
-	"log"
 	"net/http"
 	"regexp"
 	"strings"
@@ -34,13 +33,11 @@ func (this *Garment) Find(u *models.User, r render.Render, params martini.Params
 
 func (this *Garment) FindAll(opts models.URLOptionsScheme, u *models.User, r render.Render) {
 	guid := regexp.MustCompile("\b[A-F0-9]{8}(?:-[A-F0-9]{4}){3}-[A-F0-9]{12}\b")
-	ids := make([]string, 0)
+	ids := []string{}
 
 	for _, id := range strings.Split(opts.Ids, ",") {
-		if !guid.MatchString(id) {
+		if guid.MatchString(id) {
 			ids = append(ids, id)
-		} else {
-			log.Println("Wrong GUID in:", id)
 		}
 	}
 

@@ -4,6 +4,7 @@ import (
 	"df/api/models"
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/render"
+	"net/http"
 	"time"
 )
 
@@ -23,7 +24,7 @@ func (*Widget) Construct(args ...interface{}) interface{} {
 }
 
 func (this *Widget) Get(u *models.User, r render.Render, p martini.Params) {
-	r.HTML(200, this.Name, struct {
+	r.HTML(http.StatusOK, this.Name, struct {
 		Id      string
 		User    *models.UserScheme
 		Version int64
@@ -32,4 +33,11 @@ func (this *Widget) Get(u *models.User, r render.Render, p martini.Params) {
 		u.Object,
 		time.Now().Unix(),
 	})
+}
+
+func (this *Widget) Index(r render.Render, g *models.Garment) {
+	ids := make([]string, 0)
+	result := g.FindAll(ids, models.URLOptionsScheme{Limit: 100})
+
+	r.HTML(200, "index", struct{ Garments []models.GarmentScheme }{result})
 }

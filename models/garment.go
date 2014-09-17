@@ -70,8 +70,7 @@ func (this *Garment) Find(id string) *GarmentScheme {
 func (this *Garment) FindAll(ids []string, opts URLOptionsScheme) []GarmentScheme {
 	var query r.Term
 
-	if len(ids[0]) > 0 {
-		log.Println("!empty, ", len(ids), ",:", ids)
+	if len(ids) > 0 {
 		query = this.GetAll(r.Args(ids))
 	} else {
 		query = this.Skip(opts.Start).Limit(opts.Limit)
