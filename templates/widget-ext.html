@@ -180,16 +180,7 @@
                 <span class="df_icon">&#xf00d;</span>
             </div>
 
-            <!--         <% for(var i=0; i< history.length; i++) {%>
-                    <div class="dfrp_garment"
-                         data-garment="<%=history[i].id%>"
-                         style="background-image: url(<%=history[i].placeholder%>);"
-                         title="">
-                        <div class="dfrpg_select" style="display: none;"><span class="df_icon">&#xf00c;</span></div>
-                    </div>
-                <% } %> -->
-
-            <div    class="dfrp_garment" 
+<!--             <div    class="dfrp_garment" 
                     data-garment="75df08e3-a053-4cfe-97f9-d8c7f1af1393"
                     style="background-image: url(//v2.dressformer.com/assets/image/5419802a0000000000000007);"
                     title="">                    
@@ -197,27 +188,49 @@
                     <span class="df_icon">&#xf00c;</span>
                 </div>
             </div>
-            <div class="dfrp_garment" data-garment="5a411326-5a77-43ae-b580-b45a292a2d5d" title="">
+            <div class="dfrp_garment" 
+                data-garment="5a411326-5a77-43ae-b580-b45a292a2d5d" 
+                style="background-image: url(//v2.dressformer.com/assets/image/54198d7c0000000000000008);"
+                title="">
                 <div class="dfrpg_select" style="display: none;">
                     <span class="df_icon">&#xf00c;</span>
                 </div>
             </div>
-            <div class="dfrp_garment" data-garment="d6b9ebc3-d96d-423d-aa7f-d1ff4e1c7e30" title="">
+            <div class="dfrp_garment" 
+                data-garment="d6b9ebc3-d96d-423d-aa7f-d1ff4e1c7e30" 
+                style="background-image: url(//v2.dressformer.com/assets/image/54198ec80000000000000009);"                
+                title="">
                 <div class="dfrpg_select" style="display: none;">
                     <span class="df_icon">&#xf00c;</span>
                 </div>
             </div>
-            <div class="dfrp_garment" data-garment="0af3a3fb-309b-4682-a745-cbd4e32f8e41" title="">
+            <div class="dfrp_garment" 
+                data-garment="0af3a3fb-309b-4682-a745-cbd4e32f8e41" 
+                style="background-image: url(//v2.dressformer.com/assets/image/54198ef9000000000000000a);"                
+                title="">
+                <div class="dfrpg_select" style="display: none;">
+                    <span class="df_icon">&#xf00c;</span>
+                </div>
+            </div> -->
+
+            {{ range .User.History }}
+            <div class="dfrp_garment" 
+                data-garment="{{.Id}}" 
+                style="background-image: url(//v2.dressformer.com/assets/image/{{.Assets.Placeholder.Id}});"                
+                title="">
                 <div class="dfrpg_select" style="display: none;">
                     <span class="df_icon">&#xf00c;</span>
                 </div>
             </div>
+            {{ end }}            
+                
         </div>
     </div>
 
 
     <script>
         var Dressformer = {
+            test: {{ .User.History}},
             user: {{ .User }},
             garment: {
                 id: {{ .Id }}
