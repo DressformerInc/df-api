@@ -1,9 +1,7 @@
 package models
 
 import (
-	"errors"
 	r "github.com/dancannon/gorethink"
-	enc "github.com/dancannon/gorethink/encoding"
 	"log"
 )
 
@@ -26,12 +24,12 @@ type DummyScheme struct {
 }
 
 type Dummy struct {
-	r.Term
+	*Base
 }
 
 func (*Dummy) Construct(args ...interface{}) interface{} {
 	return &Dummy{
-		r.Db("dressformer").Table("dummies"),
+		&Base{r.Db("dressformer").Table("dummies")},
 	}
 }
 
@@ -70,7 +68,6 @@ func (this *Dummy) FindAll(ids []string, opts URLOptionsScheme) []DummyScheme {
 	var query r.Term
 
 	if len(ids[0]) > 0 {
-		log.Println("!empty, ", len(ids), ",:", ids)
 		query = this.GetAll(r.Args(ids))
 	} else {
 		query = this.Skip(opts.Start).Limit(opts.Limit)
@@ -94,85 +91,6 @@ func (this *Dummy) FindAll(ids []string, opts URLOptionsScheme) []DummyScheme {
 	}
 
 	return result
-}
-
-func (this *Dummy) Create(payload DummyScheme) (*DummyScheme, error) {
-	if payload.Default {
-		this.ResetDefault()
-	}
-
-	result, err := this.Insert(payload, r.InsertOpts{ReturnChanges: true}).Run(session())
-	if err != nil {
-		log.Println("Error inserting data:", err)
-		return nil, errors.New("Internal server error")
-	}
-
-	response := &r.WriteResponse{}
-
-	if err = result.One(response); err != nil {
-		log.Println("Unable to iterate cursor:", err)
-		return nil, errors.New("Internal server error")
-	}
-
-	log.Println("response:", response)
-	log.Println("inserted :", response.Inserted)
-
-	if len(response.Changes) != 1 {
-		log.Println("Unexpected length of Changes:", len(response.Changes))
-		return nil, errors.New("Internal server error")
-	}
-
-	newval := &DummyScheme{}
-
-	if err = enc.Decode(newval, response.Changes[0].NewValue); err != nil {
-		log.Println("Decode error:", err)
-		return nil, errors.New("Internal server error")
-	}
-
-	return newval, nil
-}
-
-func (this *Dummy) Put(id string, payload DummyScheme) (*DummyScheme, error) {
-	if payload.Default {
-		this.ResetDefault()
-	}
-
-	result, err := this.Get(id).Update(payload, r.UpdateOpts{ReturnChanges: true}).Run(session())
-	if err != nil {
-		log.Println("Error updating:", id, "with data:", payload, "error:", err)
-		return nil, errors.New("Wrong data")
-	}
-
-	response := &r.WriteResponse{}
-
-	if err = result.One(response); err != nil {
-		log.Println("Unable to iterate cursor:", err)
-		return nil, errors.New("Internal server error")
-	}
-
-	if len(response.Changes) != 1 {
-		log.Println("Unexpected length of Changes:", len(response.Changes))
-		return nil, errors.New("Internal server error")
-	}
-
-	newval := &DummyScheme{}
-
-	if err = enc.Decode(newval, response.Changes[0].NewValue); err != nil {
-		log.Println("Decode error:", err)
-		return nil, errors.New("Internal server error")
-	}
-
-	return newval, nil
-}
-
-func (this *Dummy) Remove(id string) error {
-	_, err := this.Get(id).Delete().Run(session())
-	if err != nil {
-		log.Println("Error deleting:", id, "error:", err)
-		return errors.New("Internal server error")
-	}
-
-	return nil
 }
 
 func (this *Dummy) ResetDefault() {

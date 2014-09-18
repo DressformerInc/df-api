@@ -1,10 +1,7 @@
 package models
 
 import (
-	"code.google.com/p/go-uuid/uuid"
-	"errors"
 	r "github.com/dancannon/gorethink"
-	enc "github.com/dancannon/gorethink/encoding"
 	"log"
 )
 
@@ -32,13 +29,13 @@ type GarmentScheme struct {
 }
 
 type Garment struct {
-	r.Term
-	dummy *Dummy
+	*Base
+	Dummy *Dummy
 }
 
 func (*Garment) Construct(args ...interface{}) interface{} {
 	return &Garment{
-		r.Db("dressformer").Table("garments"),
+		&Base{r.Db("dressformer").Table("garments")},
 		(*Dummy).Construct(nil).(*Dummy),
 	}
 }
@@ -98,82 +95,4 @@ func (this *Garment) FindAll(ids []string, opts URLOptionsScheme) []GarmentSchem
 	}
 
 	return result
-}
-
-func (this *Garment) Create(payload GarmentScheme) (*GarmentScheme, error) {
-	if payload.Gid == "" {
-		payload.Gid = uuid.New()
-	}
-
-	if payload.DummyId == "" {
-		payload.DummyId = this.dummy.Default().Id
-	}
-
-	result, err := this.Insert(payload, r.InsertOpts{ReturnChanges: true}).Run(session())
-	if err != nil {
-		log.Println("Error inserting data:", err)
-		return nil, errors.New("Internal server error")
-	}
-
-	response := &r.WriteResponse{}
-
-	if err = result.One(response); err != nil {
-		log.Println("Unable to iterate cursor:", err)
-		return nil, errors.New("Internal server error")
-	}
-
-	log.Println("inserted :", response.Inserted)
-
-	if len(response.Changes) != 1 {
-		log.Println("Unexpected length of Changes:", len(response.Changes))
-		return nil, errors.New("Internal server error")
-	}
-
-	newval := &GarmentScheme{}
-
-	if err = enc.Decode(newval, response.Changes[0].NewValue); err != nil {
-		log.Println("Decode error:", err)
-		return nil, errors.New("Internal server error")
-	}
-
-	return newval, nil
-}
-
-func (this *Garment) Put(id string, payload GarmentScheme) (*GarmentScheme, error) {
-	result, err := this.Get(id).Update(payload, r.UpdateOpts{ReturnChanges: true, Durability: "soft"}).Run(session())
-	if err != nil {
-		log.Println("Error updating:", id, "with data:", payload, "error:", err)
-		return nil, errors.New("Wrong data")
-	}
-
-	response := &r.WriteResponse{}
-
-	if err = result.One(response); err != nil {
-		log.Println("Unable to iterate cursor:", err)
-		return nil, errors.New("Internal server error")
-	}
-
-	if len(response.Changes) != 1 {
-		log.Println("Unexpected length of Changes:", len(response.Changes))
-		return nil, errors.New("Internal server error")
-	}
-
-	newval := &GarmentScheme{}
-
-	if err = enc.Decode(newval, response.Changes[0].NewValue); err != nil {
-		log.Println("Decode error:", err)
-		return nil, errors.New("Internal server error")
-	}
-
-	return newval, nil
-}
-
-func (this *Garment) Remove(id string) error {
-	_, err := this.Get(id).Delete().Run(session())
-	if err != nil {
-		log.Println("Error deleting:", id, "error:", err)
-		return errors.New("Internal server error")
-	}
-
-	return nil
 }

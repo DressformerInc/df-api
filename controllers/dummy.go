@@ -52,8 +52,11 @@ func (this *Dummy) FindAll(opts models.URLOptionsScheme, u *models.User, r rende
 }
 
 func (this *Dummy) Create(u *models.User, payload models.DummyScheme, r render.Render) {
+	if payload.Default {
+		this.model.ResetDefault()
+	}
 
-	result, err := this.model.Create(payload)
+	result, err := this.model.Create(&payload)
 	if err != nil {
 		r.JSON(http.StatusBadRequest, []byte{})
 		return
@@ -64,7 +67,11 @@ func (this *Dummy) Create(u *models.User, payload models.DummyScheme, r render.R
 
 func (this *Dummy) Put(u *models.User, payload models.DummyScheme, r render.Render, p martini.Params) {
 
-	result, err := this.model.Put(p["id"], payload)
+	if payload.Default {
+		this.model.ResetDefault()
+	}
+
+	result, err := this.model.Put(p["id"], &payload)
 	if err != nil {
 		r.JSON(http.StatusBadRequest, []byte{})
 		return

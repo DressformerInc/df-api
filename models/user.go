@@ -2,9 +2,7 @@ package models
 
 import (
 	. "df/api/utils"
-	"errors"
 	r "github.com/dancannon/gorethink"
-	enc "github.com/dancannon/gorethink/encoding"
 	"log"
 )
 
@@ -19,14 +17,14 @@ type UserScheme struct {
 }
 
 type User struct {
-	r.Term
-	dummy  *Dummy
+	*Base
+	Dummy  *Dummy
 	Object *UserScheme
 }
 
 func (*User) Construct(args ...interface{}) interface{} {
 	user := &User{
-		r.Db("dressformer").Table("users"),
+		&Base{r.Db("dressformer").Table("users")},
 		(*Dummy).Construct(nil).(*Dummy),
 		&UserScheme{},
 	}
@@ -40,8 +38,8 @@ func (*User) Construct(args ...interface{}) interface{} {
 		}
 	}
 
-	if user.dummy != nil {
-		user.Object.Dummy = user.dummy.Default()
+	if user.Dummy != nil {
+		user.Object.Dummy = user.Dummy.Default()
 	}
 
 	return user
@@ -62,8 +60,8 @@ func (this *User) constructFrom(args ...interface{}) *UserScheme {
 		}
 
 		// if not, return newly created one
-		u, _ := this.Create(UserScheme{Token: i.(Token).Get()})
-		return u
+		u, _ := this.Create(&UserScheme{Token: i.(Token).Get()})
+		return u.(*UserScheme)
 
 	default:
 		log.Println("Unexpected type:", t)
@@ -103,70 +101,6 @@ func (this *User) Find(args ...interface{}) *UserScheme {
 	return user
 }
 
-func (this *User) Put(payload interface{}) (*UserScheme, error) {
-	id := this.Object.Id
-
-	log.Println("Updating:", id, "with:", payload)
-
-	result, err := this.Get(id).Update(payload, r.UpdateOpts{ReturnChanges: true, Durability: "soft"}).Run(session())
-	if err != nil {
-		log.Println("Error updating:", id, "with data:", payload, "error:", err)
-		return nil, errors.New("Wrong data")
-	}
-
-	response := &r.WriteResponse{}
-
-	if err = result.One(response); err != nil {
-		log.Println("Unable to iterate cursor:", err)
-		return nil, errors.New("Internal server error")
-	}
-
-	if len(response.Changes) != 1 {
-		log.Println("Unexpected length of Changes:", len(response.Changes))
-		return nil, errors.New("Internal server error")
-	}
-
-	newval := &UserScheme{}
-
-	if err = enc.Decode(newval, response.Changes[0].NewValue); err != nil {
-		log.Println("Decode error:", err)
-		return nil, errors.New("Internal server error")
-	}
-
-	return newval, nil
-}
-
-func (this *User) Create(payload UserScheme) (*UserScheme, error) {
-	result, err := this.Insert(payload, r.InsertOpts{ReturnChanges: true, Durability: "soft"}).Run(session())
-	if err != nil {
-		log.Println("Error inserting data:", err)
-		return nil, errors.New("Internal server error")
-	}
-
-	response := &r.WriteResponse{}
-
-	if err = result.One(response); err != nil {
-		log.Println("Unable to iterate cursor:", err)
-		return nil, errors.New("Internal server error")
-	}
-
-	log.Println("inserted :", response.Inserted)
-
-	if len(response.Changes) != 1 {
-		log.Println("Unexpected length of Changes:", len(response.Changes))
-		return nil, errors.New("Internal server error")
-	}
-
-	newval := &UserScheme{}
-
-	if err = enc.Decode(newval, response.Changes[0].NewValue); err != nil {
-		log.Println("Decode error:", err)
-		return nil, errors.New("Internal server error")
-	}
-
-	return newval, nil
-}
-
 func (this *User) UpdateHistory(g *GarmentScheme) {
 	history := []*GarmentScheme{}
 
@@ -184,7 +118,7 @@ func (this *User) UpdateHistory(g *GarmentScheme) {
 	}
 
 	this.Object.History = history
-	this.Put(this.Object)
+	this.Put(this.Object.Id, this.Object)
 }
 
 // Just an example of usage subqueries in RethinkDB

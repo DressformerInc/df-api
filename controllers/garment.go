@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"code.google.com/p/go-uuid/uuid"
 	"df/api/models"
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/render"
@@ -51,8 +52,15 @@ func (this *Garment) FindAll(opts models.URLOptionsScheme, u *models.User, r ren
 }
 
 func (this *Garment) Create(u *models.User, payload models.GarmentScheme, r render.Render) {
+	if payload.Gid == "" {
+		payload.Gid = uuid.New()
+	}
 
-	result, err := this.model.Create(payload)
+	if payload.DummyId == "" {
+		payload.DummyId = this.model.Dummy.Default().Id
+	}
+
+	result, err := this.model.Create(&payload)
 	if err != nil {
 		r.JSON(http.StatusBadRequest, []byte{})
 		return
@@ -63,7 +71,7 @@ func (this *Garment) Create(u *models.User, payload models.GarmentScheme, r rend
 
 func (this *Garment) Put(u *models.User, payload models.GarmentScheme, r render.Render, p martini.Params) {
 
-	result, err := this.model.Put(p["id"], payload)
+	result, err := this.model.Put(p["id"], &payload)
 	if err != nil {
 		r.JSON(http.StatusBadRequest, []byte{})
 		return
