@@ -22,3 +22,7 @@ func url(s *Source, name string) {
 
 	s.Url = s.LinkTo(name)
 }
+
+func Url(s *Source, name string) {
+	url(s, name)
+}
