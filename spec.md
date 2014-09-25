@@ -95,6 +95,10 @@ Update and delete garment with `id`
 
 		"color" : "", // @todo
 		
+		"slot"  : "some string",
+		
+		"layer" : 1.0,
+		
 		"assets" : {
 			"geometry" : {
 				"url" : "//v2.dressformer.com/geometry/22a6dbed-1aab-452b-8f81-2a16e994120b",

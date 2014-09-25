@@ -11,12 +11,14 @@ type Size struct {
 }
 
 type GarmentScheme struct {
-	Id       string `gorethink:"id,omitempty"        json:"id"   binding:"-"`
-	Gid      string `gorethink:"gid,omitempty"       json:"gid,omitempty"`
-	Name     string `gorethink:"name,omitempty"      json:"name,omitempty"`
-	SizeName string `gorethink:"size_name,omitempty" json:"size_name,omitempty"`
-	Sizes    []Size `gorethink:"sizes,omitempty"     json:"sizes,omitempty"`
-	DummyId  string `gorethink:"dummy_id,omitempty"  json:"dummy_id,omitempty"`
+	Id       string  `gorethink:"id,omitempty"        json:"id"   binding:"-"`
+	Gid      string  `gorethink:"gid,omitempty"       json:"gid,omitempty"`
+	Name     string  `gorethink:"name,omitempty"      json:"name,omitempty"`
+	SizeName string  `gorethink:"size_name,omitempty" json:"size_name,omitempty"`
+	Sizes    []Size  `gorethink:"sizes,omitempty"     json:"sizes,omitempty"`
+	DummyId  string  `gorethink:"dummy_id,omitempty"  json:"dummy_id,omitempty"`
+	Slot     string  `gorethink:"slot,omitempty"      json:"slot,omitempty"`
+	Layer    float64 `gorethink:"layer,omitempty"     json:"layer,omitempty"`
 
 	Assets struct {
 		Geometry    Source `gorethink:"geometry,omitempty"    json:"geometry,omitempty"`
