@@ -62,6 +62,7 @@ func (this *Garment) Find(id string) *GarmentScheme {
 	url(&result.Assets.Normal, "image")
 	url(&result.Assets.Specular, "image")
 	url(&result.Assets.Placeholder, "image")
+	url(&result.Assets.Mtl, "")
 
 	return result
 }
@@ -94,6 +95,7 @@ func (this *Garment) FindAll(ids []string, opts URLOptionsScheme) []GarmentSchem
 		url(&result[idx].Assets.Normal, "image")
 		url(&result[idx].Assets.Specular, "image")
 		url(&result[idx].Assets.Placeholder, "image")
+		url(&result[idx].Assets.Mtl, "")
 	}
 
 	return result

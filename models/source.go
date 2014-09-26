@@ -12,6 +12,10 @@ type Source struct {
 }
 
 func (this *Source) LinkTo(name string) string {
+	if name == "" {
+		return AppConfig.AssetsUrl() + "/" + this.Id
+	}
+
 	return AppConfig.AssetsUrl() + "/" + name + "/" + this.Id
 }
 
