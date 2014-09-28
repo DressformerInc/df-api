@@ -68,6 +68,7 @@ func main() {
 
 	route.Get("/widget/ext/:id",
 		construct(&ctrl.Widget{}, "widget-ext"),
+		construct(&models.Garment{}),
 		(*ctrl.Widget).Get,
 	)
 

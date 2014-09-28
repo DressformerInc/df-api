@@ -23,14 +23,16 @@ func (*Widget) Construct(args ...interface{}) interface{} {
 	return &Widget{name}
 }
 
-func (this *Widget) Get(u *models.User, r render.Render, p martini.Params) {
+func (this *Widget) Get(u *models.User, g *models.Garment, r render.Render, p martini.Params) {
 	r.HTML(http.StatusOK, this.Name, struct {
 		Id      string
 		User    *models.UserScheme
+		Garment *models.GarmentScheme
 		Version int64
 	}{
 		p["id"],
 		u.Object,
+		g.Find(p["id"]),
 		time.Now().Unix(),
 	})
 }
