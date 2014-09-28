@@ -230,12 +230,8 @@
 
     <script>
         var Dressformer = {
-            test: {{ .User.History}},
-            testGarment: {{ .Garment }},
             user: {{ .User }},
-            garment: {
-                id: {{ .Id }}
-            }            
+            garment: {{ .Garment }}           
         };
         Dressformer.user.history =[  {
                         id: '75df08e3-a053-4cfe-97f9-d8c7f1af1393',
@@ -254,6 +250,7 @@
                         placeholder: ''
                     }];
         Dressformer.params ={};
+        console.log('Dressformer:', Dressformer);
     </script>
     <script src="/js/viewport-webgl.js?v={{.Version}}"></script>
 
