@@ -247,17 +247,20 @@
                     <span class="df_icon">&#xf00c;</span>
                 </div>
             </div> -->
-
-            {{ range .User.History }}
-            <div class="dfrp_garment" 
-                data-garment="{{.Id}}" 
-                style="background-image: url(//v2.dressformer.com/assets/image/{{.Assets.Placeholder.Id}});"                
-                title="">
-                <div class="dfrpg_select" style="display: none;">
-                    <span class="df_icon">&#xf00c;</span>
+            {{ with .User }}
+                {{ range .History }}
+                <div class="dfrp_garment" 
+                    data-garment="{{.Id}}" 
+                    {{ if .Assets.Placeholder.Id }}
+                    style="background-image: url(//v2.dressformer.com/assets/image/{{.Assets.Placeholder.Id}});"                
+                    {{ end }}
+                    title="">
+                    <div class="dfrpg_select" style="display: none;">
+                        <span class="df_icon">&#xf00c;</span>
+                    </div>
                 </div>
-            </div>
-            {{ end }}            
+                {{ end }}  
+            {{ end}}          
                 
         </div>
     </div>
