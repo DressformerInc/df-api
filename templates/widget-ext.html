@@ -52,7 +52,7 @@
                     <span class="df_icon">&#xf068;</span>
                 </div>
 
-                <div class="dfwv_control dfwvc_d_silver">
+<!--                 <div class="dfwv_control dfwvc_d_silver">
                     <div class="dfwvc_d_inner dfd_silver"></div>
                 </div>
                 <div class="dfwv_control dfwvc_d_gold">
@@ -63,7 +63,7 @@
                 </div>
                 <div class="dfwv_control dfwvc_d_plastic">
                     <div class="dfwvc_d_inner dfd_plastic"></div>
-                </div>
+                </div> -->
 
                 <div class="df_preloader">
                     <div class="dfp_dot" id="dfpd_left"></div>
@@ -140,6 +140,42 @@
             </div>
 
         </div>
+
+        <div class="df_left_sidebar" id="dummy">
+            <div class="h10"></div>
+<!--             <div class="dfp_block">Gender:
+                <div class="dfpb_radio dfpbr_left dfpb_radio_on">Female</div>
+                <div class="dfpb_radio dfpbr_right">Male</div>
+            </div>
+ -->            <div class="h10"></div>
+            <div class="dfp_block_mat" id="radioMatcap">
+                <div class="dfp_block_text">Synthetic:</div>
+                <div class="dfp_mat dfd_silver " data-value="silver"><span class="df_icon">&#xf00c;</span></div>
+                <div class="h10"></div>
+                <div class="dfp_mat dfd_gold " data-value="gold"><span class="df_icon">&#xf00c;</span></div>
+                <div class="h10"></div>
+                <div class="dfp_mat dfd_carbon active" data-value="carbon"><span class="df_icon">&#xf00c;</span></div>
+                <div class="h10"></div>
+                <div class="dfp_mat dfd_plastic " data-value="plastic"><span class="df_icon">&#xf00c;</span></div>
+                <div class="dfp_block_text">Skin tone:</div>
+                <div class="dfp_mat dfd_skin_1 " data-value="skin1"><span class="df_icon">&#xf00c;</span></div>
+                <div class="h10"></div>
+                <div class="dfp_mat dfd_skin_2 " data-value="skin2"><span class="df_icon">&#xf00c;</span></div>
+                <div class="h10"></div>
+                <div class="dfp_mat dfd_skin_3 " data-value="skin3"><span class="df_icon">&#xf00c;</span></div>
+                <div class="h10"></div>
+                <div class="dfp_mat dfd_skin_4 " data-value="skin4"><span class="df_icon">&#xf00c;</span></div>
+                <div class="h10"></div>
+                <div class="dfp_mat dfd_skin_5 " data-value="skin5"><span class="df_icon">&#xf00c;</span></div>
+            </div>
+            <div class="h10"></div>
+<!--             <div class="dfp_block">Save changes?
+                <div class="dfp_btn dfpbr_left dfp_btn_cancel">Cancel</div>
+                <div class="dfp_btn dfpbr_right dfp_btn_ok">Yes</div>
+            </div>
+ -->            
+        </div>
+
         <div class="df_left_sidebar" id="share">
             <div class="df_share_btn">
                 <span class="df_icon">&#xf09a;</span>
@@ -153,10 +189,9 @@
         </div>
 
         <div class="df_widget_left_panel" id="dfw_left_panel">
-            <div class="dflp_btn" id="sb_btn_profile" title="Sizing controls & measurements">My Body Profile
-            </div>
-            <div class="dflp_btn" id="sb_btn_share" title="Share the 3D-viewport picture">Share Look
-            </div>
+            <div class="dflp_btn" id="sb_btn_profile" title="Sizing controls & measurements">My Body Profile</div>
+            <div class="dflp_btn" id="sb_btn_dummy" title="Sizing controls & measurements">Dummy Settings</div>
+            <div class="dflp_btn" id="sb_btn_share" title="Share the 3D-viewport picture">Share Look</div>
             <a href="//dressformer.com" class="df_logo" title="Go to Dressformer.com"></a>
         </div>
 
@@ -233,22 +268,6 @@
             user: {{ .User }},
             garment: {{ .Garment }}           
         };
-        // Dressformer.user.history =[  {
-        //                 id: '75df08e3-a053-4cfe-97f9-d8c7f1af1393',
-        //                 placeholder: ''
-        //             },
-        //             {
-        //                 id: '5a411326-5a77-43ae-b580-b45a292a2d5d',
-        //                 placeholder: ''
-        //             },
-        //             {
-        //                 id: 'd6b9ebc3-d96d-423d-aa7f-d1ff4e1c7e30',
-        //                 placeholder: ''
-        //             },
-        //             {
-        //                 id: '0af3a3fb-309b-4682-a745-cbd4e32f8e41',
-        //                 placeholder: ''
-        //             }];
         Dressformer.params ={};
         console.log('Dressformer:', Dressformer);
     </script>
