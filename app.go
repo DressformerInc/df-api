@@ -4,15 +4,13 @@ import (
 	ctrl "df/api/controllers"
 	"df/api/models"
 	. "df/api/utils"
-	// "encoding/json"
 	"fmt"
-	"github.com/3d0c/binding"
 	"github.com/go-martini/martini"
 	"github.com/gorilla/securecookie"
+	"github.com/martini-contrib/binding"
 	"github.com/martini-contrib/render"
 	"log"
 	"net/http"
-	// "os"
 )
 
 func init() {
@@ -158,6 +156,29 @@ func main() {
 		construct(&ctrl.Dummy{}),
 		(*ctrl.Dummy).Remove,
 	)
+
+	// Materials
+
+	route.Post("/materials",
+		binding.Json([]models.MaterialScheme{}),
+		ErrorHandler,
+		construct(&ctrl.Material{}),
+		(*ctrl.Material).Create,
+	)
+
+	route.Get("/materials",
+		binding.Form(models.URLOptionsScheme{}),
+		ErrorHandler,
+		construct(&ctrl.Material{}),
+		(*ctrl.Material).FindAll,
+	)
+
+	route.Get("/materials/:id",
+		construct(&ctrl.Material{}),
+		(*ctrl.Material).Find,
+	)
+
+	//
 
 	m.Action(route.Handle)
 

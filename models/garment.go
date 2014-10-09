@@ -42,7 +42,6 @@ func (*Garment) Construct(args ...interface{}) interface{} {
 	}
 }
 
-// obsolete
 func (this *Garment) Find(id string) *GarmentScheme {
 	var result *GarmentScheme
 
@@ -68,26 +67,12 @@ func (this *Garment) Find(id string) *GarmentScheme {
 }
 
 func (this *Garment) FindAll(ids []string, opts URLOptionsScheme) []GarmentScheme {
-	var query r.Term
-
-	if len(ids) > 0 {
-		query = this.GetAll(r.Args(ids))
-	} else {
-		query = this.Skip(opts.Start).Limit(opts.Limit)
-	}
-
-	rows, err := query.Run(session())
-
+	i, err := this.Base.FindAll(ids, opts, &[]GarmentScheme{})
 	if err != nil {
-		log.Println("Unable to fetch cursor for args:", ids, "Error:", err)
 		return nil
 	}
 
-	result := []GarmentScheme{}
-
-	if err = rows.All(&result); err != nil {
-		log.Println("Unable to get data, err:", err)
-	}
+	result := *(i.(*[]GarmentScheme))
 
 	for idx, _ := range result {
 		url(&result[idx].Assets.Geometry, "geometry")

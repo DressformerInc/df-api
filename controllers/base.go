@@ -4,19 +4,16 @@ type Controller interface {
 	Construct(arg ...interface{}) interface{}
 }
 
-/*
-	@todo
+// @todo
+//
+// type Base struct{}
 
-type BaseController struct{}
+// func (*Base) Construct(args ...interface{}) interface{} {
+// 	return &Base{}
+// }
 
-func (*BaseController) Construct(args ...interface{}) interface{} {
-	return &BaseController{
+// func (*Base) Router(ctrl interface{}) (int, []byte) {
+// 	log.Println(reflect.TypeOf(ctrl))
 
-	}
-}
-
-func (this *BaseController) Find(u *models.User, r render.Render, params martini.Params) (int, []byte) {
-	r.JSON(http.StatusOK, this.model.Find(params["id"]))
-}
-
-*/
+// 	return 202, []byte{}
+// }

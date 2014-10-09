@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"github.com/3d0c/binding"
+	"github.com/martini-contrib/binding"
 	"github.com/martini-contrib/render"
 	"net/http"
 )

@@ -65,26 +65,12 @@ func (this *Dummy) Default() *DummyScheme {
 }
 
 func (this *Dummy) FindAll(ids []string, opts URLOptionsScheme) []DummyScheme {
-	var query r.Term
-
-	if len(ids[0]) > 0 {
-		query = this.GetAll(r.Args(ids))
-	} else {
-		query = this.Skip(opts.Start).Limit(opts.Limit)
-	}
-
-	rows, err := query.Run(session())
-
+	i, err := this.Base.FindAll(ids, opts, &[]DummyScheme{})
 	if err != nil {
-		log.Println("Unable to fetch cursor for args:", ids, "Error:", err)
 		return nil
 	}
 
-	result := []DummyScheme{}
-
-	if err = rows.All(&result); err != nil {
-		log.Println("Unable to get data, err:", err)
-	}
+	result := *(i.(*[]DummyScheme))
 
 	for idx, _ := range result {
 		url(&result[idx].Assets.Geometry, "geometry")

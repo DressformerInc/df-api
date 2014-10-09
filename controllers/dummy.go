@@ -4,7 +4,6 @@ import (
 	"df/api/models"
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/render"
-	"log"
 	"net/http"
 	"regexp"
 	"strings"
@@ -35,10 +34,8 @@ func (this *Dummy) FindAll(opts models.URLOptionsScheme, u *models.User, r rende
 	ids := make([]string, 0)
 
 	for _, id := range strings.Split(opts.Ids, ",") {
-		if !guid.MatchString(id) {
+		if guid.MatchString(id) {
 			ids = append(ids, id)
-		} else {
-			log.Println("Wrong GUID in:", id)
 		}
 	}
 

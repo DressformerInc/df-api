@@ -29,8 +29,6 @@ func (*User) Construct(args ...interface{}) interface{} {
 		&UserScheme{},
 	}
 
-	log.Println("args:", args)
-
 	if len(args) > 0 {
 		if user.Object = user.constructFrom(args[0]); user.Object == nil {
 			log.Println("Unexpected error, unable to proceed. Error: user.Object is nil")
