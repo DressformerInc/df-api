@@ -2,7 +2,7 @@
 gin-bin
 bin/
 sync
-deploy.lin
+deploy.lin*
 api
 public
 config.json

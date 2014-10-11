@@ -1,14 +1,16 @@
 package models
 
 import (
+	. "df/api/utils"
 	r "github.com/dancannon/gorethink"
 	"log"
 )
 
 type DummyScheme struct {
-	Id      string `gorethink:"id,omitempty"      json:"id,omitempty"   binding:"-"`
-	Name    string `gorethink:"name,omitempty"    json:"name,omitempty"`
-	Default bool   `gorethink:"default,omitempty" json:"default,omitempty"`
+	Id        string `gorethink:"id,omitempty"      json:"id,omitempty"   binding:"-"`
+	Name      string `gorethink:"name,omitempty"    json:"name,omitempty"`
+	Default   bool   `gorethink:"default,omitempty" json:"default,omitempty"`
+	UrlPrefix string `gorethink:"-"                 json:"url_prefix,omitempty"`
 
 	Assets struct {
 		Geometry Source `gorethink:"geometry,omitempty" json:"geometry,omitempty"`
@@ -36,7 +38,9 @@ func (*Dummy) Construct(args ...interface{}) interface{} {
 func (this *Dummy) Find(id string) *DummyScheme {
 	var query r.Term
 
-	result := &DummyScheme{}
+	result := &DummyScheme{
+		UrlPrefix: AppConfig.AssetsUrl() + "/",
+	}
 
 	if id == "" {
 		query = this.GetAllByIndex("default", true)
@@ -73,7 +77,7 @@ func (this *Dummy) FindAll(ids []string, opts URLOptionsScheme) []DummyScheme {
 	result := *(i.(*[]DummyScheme))
 
 	for idx, _ := range result {
-		url(&result[idx].Assets.Geometry, "geometry")
+		(&result[idx]).UrlPrefix = AppConfig.AssetsUrl() + "/"
 	}
 
 	return result

@@ -33,7 +33,7 @@ func (this *Garment) Find(u *models.User, r render.Render, params martini.Params
 }
 
 func (this *Garment) FindAll(opts models.URLOptionsScheme, u *models.User, r render.Render) {
-	guid := regexp.MustCompile("\b[A-F0-9]{8}(?:-[A-F0-9]{4}){3}-[A-F0-9]{12}\b")
+	guid := regexp.MustCompile("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")
 	ids := []string{}
 
 	for _, id := range strings.Split(opts.Ids, ",") {
