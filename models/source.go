@@ -5,10 +5,11 @@ import (
 )
 
 type Source struct {
-	Id     string  `gorethink:"id,omitempty"        json:"id,omitempty"`
-	Weight float64 `gorethink:"weight,omitempty"    json:"weight,omitempty"`
-	Name   string  `gorethink:"orig_name,omitempty" json:"orig_name,omitempty"`
-	Url    string  `gorethink:"-"                   json:"url,omitempty" binding:"-"`
+	Id      string  `gorethink:"id,omitempty"        json:"id,omitempty"`
+	Weight  float64 `gorethink:"weight,omitempty"    json:"weight,omitempty"`
+	Name    string  `gorethink:"orig_name,omitempty" json:"orig_name,omitempty"`
+	Url     string  `gorethink:"-"                   json:"url,omitempty" binding:"-"`
+	Options string  `gorethink:"options,omitempty"   json:"options,omitempty"`
 }
 
 func (this *Source) LinkTo(name string) string {

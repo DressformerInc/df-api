@@ -33,9 +33,5 @@ func filter(u *models.UserScheme) {
 
 	for idx, _ := range u.History {
 		models.Url(&u.History[idx].Assets.Geometry, "geometry")
-		models.Url(&u.History[idx].Assets.Placeholder, "image")
-		models.Url(&u.History[idx].Assets.Diffuse, "image")
-		models.Url(&u.History[idx].Assets.Specular, "image")
-		models.Url(&u.History[idx].Assets.Normal, "image")
 	}
 }

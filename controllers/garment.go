@@ -42,10 +42,6 @@ func (this *Garment) FindAll(opts models.URLOptionsScheme, u *models.User, r ren
 		}
 	}
 
-	if opts.Limit == 0 || opts.Limit > 100 {
-		opts.Limit = 25
-	}
-
 	result := this.model.FindAll(ids, opts)
 
 	r.JSON(http.StatusOK, result)

@@ -1,6 +1,7 @@
 package models
 
 import (
+	. "df/api/utils"
 	r "github.com/dancannon/gorethink"
 	"log"
 )
@@ -11,39 +12,42 @@ type Size struct {
 }
 
 type GarmentScheme struct {
-	Id       string  `gorethink:"id,omitempty"        json:"id"   binding:"-"`
-	Gid      string  `gorethink:"gid,omitempty"       json:"gid,omitempty"`
-	Name     string  `gorethink:"name,omitempty"      json:"name,omitempty"`
-	SizeName string  `gorethink:"size_name,omitempty" json:"size_name,omitempty"`
-	Sizes    []Size  `gorethink:"sizes,omitempty"     json:"sizes,omitempty"`
-	DummyId  string  `gorethink:"dummy_id,omitempty"  json:"dummy_id,omitempty"`
-	Slot     string  `gorethink:"slot,omitempty"      json:"slot,omitempty"`
-	Layer    float64 `gorethink:"layer,omitempty"     json:"layer,omitempty"`
+	Id        string  `gorethink:"id,omitempty"        json:"id"   binding:"-"`
+	Gid       string  `gorethink:"gid,omitempty"       json:"gid,omitempty"`
+	Name      string  `gorethink:"name,omitempty"      json:"name,omitempty"`
+	SizeName  string  `gorethink:"size_name,omitempty" json:"size_name,omitempty"`
+	Sizes     []Size  `gorethink:"sizes,omitempty"     json:"sizes,omitempty"`
+	DummyId   string  `gorethink:"dummy_id,omitempty"  json:"dummy_id,omitempty"`
+	Slot      string  `gorethink:"slot,omitempty"      json:"slot,omitempty"`
+	Layer     float64 `gorethink:"layer,omitempty"     json:"layer,omitempty"`
+	UrlPrefix string  `gorethink:"-"                   json:"url_prefix,omitempty"`
 
 	Assets struct {
 		Geometry    Source `gorethink:"geometry,omitempty"    json:"geometry,omitempty"`
-		Mtl         Source `gorethink:"mtl,omitempty"         json:"mtl,omitempty"`
-		Diffuse     Source `gorethink:"diffuse,omitempty"     json:"diffuse,omitempty"`
-		Normal      Source `gorethink:"normal,omitempty"      json:"normal,omitempty"`
-		Specular    Source `gorethink:"specular,omitempty"    json:"specular,omitempty"`
 		Placeholder Source `gorethink:"placeholder,omitempty" json:"placeholder,omitempty"`
 	} `gorethink:"assets,omitempty" json:"assets,omitempty"`
+
+	Materials interface{} `gorethink:"materials,omitempty"    json:"materials,omitempty"`
 }
 
 type Garment struct {
 	*Base
-	Dummy *Dummy
+	Dummy    *Dummy
+	Material *Material
 }
 
 func (*Garment) Construct(args ...interface{}) interface{} {
 	return &Garment{
 		&Base{r.Db("dressformer").Table("garments")},
 		(*Dummy).Construct(nil).(*Dummy),
+		(*Material).Construct(nil).(*Material),
 	}
 }
 
 func (this *Garment) Find(id string) *GarmentScheme {
-	var result *GarmentScheme
+	result := &GarmentScheme{
+		UrlPrefix: AppConfig.AssetsUrl() + "/",
+	}
 
 	rows, err := this.Get(id).Run(session())
 	if err != nil {
@@ -56,12 +60,24 @@ func (this *Garment) Find(id string) *GarmentScheme {
 		return nil
 	}
 
-	url(&result.Assets.Geometry, "geometry")
-	url(&result.Assets.Diffuse, "image")
-	url(&result.Assets.Normal, "image")
-	url(&result.Assets.Specular, "image")
-	url(&result.Assets.Placeholder, "image")
-	url(&result.Assets.Mtl, "")
+	return this.Expand(result)
+}
+
+func (this *Garment) Expand(result *GarmentScheme) *GarmentScheme {
+	var items []string
+
+	switch t := result.Materials.(type) {
+	case []interface{}:
+		for idx, _ := range result.Materials.([]interface{}) {
+			items = append(items, result.Materials.([]interface{})[idx].(string))
+		}
+
+	default:
+		log.Println("Unexpected type:", t)
+		return result
+	}
+
+	result.Materials = this.Material.FindAll(items, URLOptionsScheme{})
 
 	return result
 }
@@ -75,12 +91,7 @@ func (this *Garment) FindAll(ids []string, opts URLOptionsScheme) []GarmentSchem
 	result := *(i.(*[]GarmentScheme))
 
 	for idx, _ := range result {
-		url(&result[idx].Assets.Geometry, "geometry")
-		url(&result[idx].Assets.Diffuse, "image")
-		url(&result[idx].Assets.Normal, "image")
-		url(&result[idx].Assets.Specular, "image")
-		url(&result[idx].Assets.Placeholder, "image")
-		url(&result[idx].Assets.Mtl, "")
+		(&result[idx]).UrlPrefix = AppConfig.AssetsUrl() + "/"
 	}
 
 	return result

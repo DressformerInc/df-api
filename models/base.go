@@ -112,6 +112,10 @@ func (this *Base) Remove(id string) error {
 func (this *Base) FindAll(ids []string, opts URLOptionsScheme, typ interface{}) (interface{}, error) {
 	var query r.Term
 
+	if opts.Limit == 0 || opts.Limit > 100 {
+		opts.Limit = 25
+	}
+
 	if len(ids) > 0 {
 		query = this.GetAll(r.Args(ids))
 	} else {
