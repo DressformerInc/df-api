@@ -25,6 +25,7 @@ type GarmentScheme struct {
 	Assets struct {
 		Geometry    Source `gorethink:"geometry,omitempty"    json:"geometry,omitempty"`
 		Placeholder Source `gorethink:"placeholder,omitempty" json:"placeholder,omitempty"`
+		MtlSrc      Source `gorethink:"mtl_src,omitempty"     json:"mtl_src,omitempty"`
 	} `gorethink:"assets,omitempty" json:"assets,omitempty"`
 
 	Materials interface{} `gorethink:"materials,omitempty"    json:"materials,omitempty"`
