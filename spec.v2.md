@@ -289,7 +289,7 @@ Result:
 ### /materials
 Create and Get methods for materials object
 
-__Endpoint:__ `http://v2.dressformer.com/api/v2/dummies/:id`  
+__Endpoint:__ `http://v2.dressformer.com/api/v2/materials`  
 
 
 __Methods:__ 
