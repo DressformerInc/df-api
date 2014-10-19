@@ -287,7 +287,7 @@ Result:
 ```
 
 ### /materials
-Create and Get methods for materials object
+Create and Get materials
 
 __Endpoint:__ `http://v2.dressformer.com/api/v2/materials`  
 

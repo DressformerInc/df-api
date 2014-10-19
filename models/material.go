@@ -11,6 +11,8 @@ type MaterialScheme struct {
 	Kd        string  `gorethink:"kd,omitempty"     json:"kd,omitempty"        mtl:"Kd"`
 	Ks        string  `gorethink:"ks,omitempty"     json:"ks,omitempty"        mtl:"Ks"`
 	Ts        string  `gorethink:"ts,omitempty"     json:"ts,omitempty"        mtl:"Ts"`
+	Tf        string  `gorethink:"tf,omitempty"     json:"tf,omitempty"        mtl:"Tf"`
+	Tr        string  `gorethink:"tr,omitempty"     json:"tr,omitempty"        mtl:"Tr"`
 	Illum     int     `gorethink:"illum,omitempty"  json:"illum,omitempty"     mtl:"illum"`
 	D         string  `gorethink:"d,omitempty"      json:"d,omitempty"         mtl:"d"`
 	Ns        string  `gorethink:"ns,omitempty"     json:"ns,omitempty"        mtl:"Ns"`
