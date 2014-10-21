@@ -67,14 +67,13 @@ func (this *Garment) Find(id string) *GarmentScheme {
 func (this *Garment) Expand(result *GarmentScheme) *GarmentScheme {
 	var items []string
 
-	switch t := result.Materials.(type) {
+	switch result.Materials.(type) {
 	case []interface{}:
 		for idx, _ := range result.Materials.([]interface{}) {
 			items = append(items, result.Materials.([]interface{})[idx].(string))
 		}
 
 	default:
-		log.Println("Unexpected type:", t)
 		return result
 	}
 

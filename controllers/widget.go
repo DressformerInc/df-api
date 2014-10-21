@@ -24,6 +24,10 @@ func (*Widget) Construct(args ...interface{}) interface{} {
 }
 
 func (this *Widget) Get(u *models.User, g *models.Garment, r render.Render, p martini.Params) {
+	garment := g.Find(p["id"])
+
+	u.UpdateHistory(garment)
+
 	r.HTML(http.StatusOK, this.Name, struct {
 		Id      string
 		User    *models.UserScheme
@@ -32,7 +36,7 @@ func (this *Widget) Get(u *models.User, g *models.Garment, r render.Render, p ma
 	}{
 		p["id"],
 		u.Object,
-		g.Find(p["id"]),
+		garment,
 		time.Now().Unix(),
 	})
 }
