@@ -31,7 +31,7 @@ Every 4XX response contains JSON with an error object like
 ### /garments 
 Get garments list. Create new garment.  
 
-__Endpoint:__ `http://v2.dressformer.com/api/v2/garments`  
+__Endpoint:__ `http://v2.dressformer.com/api/garments`  
 
 __Methods:__ 
 
@@ -48,7 +48,7 @@ __Result:__ Array of garment objects
 e.g.:
 
 ```
-GET /v2/garments?ids=93e92e72-1bdb-436f-bdb9-52dba6c16176
+GET /garments?ids=93e92e72-1bdb-436f-bdb9-52dba6c16176
 
 [
 	{ 
@@ -59,7 +59,7 @@ GET /v2/garments?ids=93e92e72-1bdb-436f-bdb9-52dba6c16176
 ```
 
 ### /garments/:id
-__Endpoint:__ `http://v2.dressformer.com/api/v2/garments/:id`  
+__Endpoint:__ `http://v2.dressformer.com/api/garments/:id`  
 
 __Methods:__ 
 Get, update and delete certain garment.
@@ -93,7 +93,7 @@ Get, update and delete certain garment.
 		"slot"  : "some string",
 		"layer" : 1.0,
 
-		"url_prefix": "//v2.dressformer.com/assets/v2/",
+		"url_prefix": "//v2.dressformer.com/assets",
 
 		"assets" : {
 			"geometry" : {
@@ -119,7 +119,7 @@ Get, update and delete certain garment.
 ```
 
 ### /user
-__Endpoint:__ `http://v2.dressformer.com/api/v2/user`  
+__Endpoint:__ `http://v2.dressformer.com/user`  
 
 
 __Methods:__ 
@@ -192,7 +192,7 @@ __Result:__ Object
 To get morphed mannequin, we should add all users body parameters to the dummy link, e.g.:
 
 ```
-GET v2.dressformer.com/assets/v2/22a6dbed-1aab-452b-8f81-2a16e994120b?height=174.0&chest=95.0&underbust=72.0&waist=61.5&hips=89.0
+GET v2.dressformer.com/assets/22a6dbed-1aab-452b-8f81-2a16e994120b?height=174.0&chest=95.0&underbust=72.0&waist=61.5&hips=89.0
 ```
 
 #### Placeholders and History
@@ -202,7 +202,7 @@ GET v2.dressformer.com/assets/v2/22a6dbed-1aab-452b-8f81-2a16e994120b?height=174
 ### /dummies
 Create and Get methods for dummies
 
-__Endpoint:__ `http://v2.dressformer.com/api/v2/dummies`  
+__Endpoint:__ `http://v2.dressformer.com/api/dummies`  
 
 
 __Methods:__ 
@@ -222,7 +222,7 @@ __Result:__ Array of Objects or Object for POST
 	"id"         : "0ae99696-0e13-4c54-8ad7-d1488dffbf65",
 	"name"       : "default dummy",
 	"default"    : true,
-	"url_prefix" : "//v2.dressformer.com/assets/v2/",  
+	"url_prefix" : "//v2.dressformer.com/assets",  
 
 	"assets": {
 		"geometry": {
@@ -244,7 +244,7 @@ __Result:__ Array of Objects or Object for POST
 ### /dummies/:id
 Update and Delete methods for dummy object
 
-__Endpoint:__ `http://v2.dressformer.com/api/v2/dummies/:id`  
+__Endpoint:__ `http://v2.dressformer.com/api/dummies/:id`  
 
 
 __Methods:__ 
@@ -266,7 +266,7 @@ curl -XPOST -H "Content-Type:application/json" -d '
 			"id" : "e748f388-36f8-47a2-b012-61f1083b80e7"
 		}
 	}
-}' http://v2.dressformer.com/api/v2/dummies
+}' http://v2.dressformer.com/api/dummies
 ```
 
 Result:
@@ -276,7 +276,7 @@ Result:
 	"id"         : "0ae99696-0e13-4c54-8ad7-d1488dffbf65",
 	"name"       : "default dummy",
 	"default"    : true,
-	"url_prefix" : "//v2.dressformer.com/assets/v2/",  
+	"url_prefix" : "//v2.dressformer.com/assets",  
 	"assets": {
 		"geometry": {
 			"id"  : "e748f388-36f8-47a2-b012-61f1083b80e7"
@@ -289,7 +289,7 @@ Result:
 ### /materials
 Create and Get materials
 
-__Endpoint:__ `http://v2.dressformer.com/api/v2/materials`  
+__Endpoint:__ `http://v2.dressformer.com//materials`  
 
 
 __Methods:__ 
@@ -360,7 +360,7 @@ File API
 ### /
 _Upload files to asset._
 
-__Endpoint:__ `http://v2.dressformer.com/assets/v2`  
+__Endpoint:__ `http://v2.dressformer.com/assets`  
   
 __Methods:__
 
@@ -408,7 +408,7 @@ and returns
 ### /:id
 _Get file from asset. Uniform method for every content types._
 
-__Endpoint:__ `http://v2.dressformer.com/assets/v2`  
+__Endpoint:__ `http://v2.dressformer.com/assets`  
   
 __Methods:__
 

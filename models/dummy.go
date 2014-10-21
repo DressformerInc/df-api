@@ -59,8 +59,6 @@ func (this *Dummy) Find(id string) *DummyScheme {
 		return nil
 	}
 
-	url(&result.Assets.Geometry, "geometry")
-
 	return result
 }
 
