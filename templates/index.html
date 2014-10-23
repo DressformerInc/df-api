@@ -30,9 +30,9 @@
         {{range .Garments}}
         <li class="garment">
         <br/>
-        <a href="/widget/ext/{{.Id}}">{{.Id}}</a>
+        <a href="/widget/ext/{{.Id}}">{{.Name}} - {{.Id}}</a>
         <br/>
-        <img src="{{.Assets.Placeholder.Url}}?scale=200x"></li>
+        <img src="{{.UrlPrefix}}{{.Assets.Placeholder.Id}}?scale=200x"></li>
         {{end}}
     </ul>
 
