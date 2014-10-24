@@ -5,6 +5,8 @@ import (
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/render"
 	"net/http"
+	"regexp"
+	"strings"
 	"time"
 )
 
@@ -37,6 +39,31 @@ func (this *Widget) Get(u *models.User, g *models.Garment, r render.Render, p ma
 		p["id"],
 		u.Object,
 		garment,
+		time.Now().Unix(),
+	})
+}
+
+func (this *Widget) FindAll(opts models.URLOptionsScheme, u *models.User, g *models.Garment, r render.Render) {
+	guid := regexp.MustCompile("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")
+	ids := []string{}
+
+	for _, id := range strings.Split(opts.Ids, ",") {
+		if guid.MatchString(id) {
+			ids = append(ids, id)
+		}
+	}
+
+	garments := g.FindAll(ids, opts)
+
+	r.HTML(http.StatusOK, this.Name, struct {
+		Ids      []string
+		User     *models.UserScheme
+		Garments []models.GarmentScheme
+		Version  int64
+	}{
+		ids,
+		u.Object,
+		garments,
 		time.Now().Unix(),
 	})
 }
