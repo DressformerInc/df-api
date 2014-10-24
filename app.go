@@ -60,9 +60,10 @@ func main() {
 	// Widget
 
 	route.Get("/widget/ext",
+		binding.Form(models.URLOptionsScheme{}),
 		construct(&ctrl.Widget{}, "widget-ext"),
 		construct(&models.Garment{}),
-		(*ctrl.Widget).Get,
+		(*ctrl.Widget).FindAll,
 	)
 
 	route.Get("/widget/ext/:id",

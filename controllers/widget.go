@@ -31,14 +31,14 @@ func (this *Widget) Get(u *models.User, g *models.Garment, r render.Render, p ma
 	u.UpdateHistory(garment)
 
 	r.HTML(http.StatusOK, this.Name, struct {
-		Id      string
-		User    *models.UserScheme
-		Garment *models.GarmentScheme
-		Version int64
+		Ids      []string
+		User     *models.UserScheme
+		Garments []models.GarmentScheme
+		Version  int64
 	}{
-		p["id"],
+		[]string{p["id"]},
 		u.Object,
-		garment,
+		[]models.GarmentScheme{*garment},
 		time.Now().Unix(),
 	})
 }
