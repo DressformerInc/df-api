@@ -92,6 +92,7 @@ func (this *Garment) FindAll(ids []string, opts URLOptionsScheme) []GarmentSchem
 
 	for idx, _ := range result {
 		(&result[idx]).UrlPrefix = AppConfig.AssetsUrl() + "/"
+		result[idx] = *this.Expand(&result[idx])
 	}
 
 	if result == nil {

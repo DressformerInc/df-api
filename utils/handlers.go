@@ -46,7 +46,6 @@ func TokenHandler(w http.ResponseWriter, r *http.Request, sc *securecookie.Secur
 		http.SetCookie(w, cookie)
 	} else {
 		if err := sc.Decode("df-token", cookie.Value, &this.payload); err == nil {
-			log.Println("df-token:", this.payload)
 			this.IsRestored = true
 		}
 	}

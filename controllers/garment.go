@@ -43,6 +43,7 @@ func (this *Garment) FindAll(opts models.URLOptionsScheme, u *models.User, r ren
 	}
 
 	result := this.model.FindAll(ids, opts)
+	u.UpdateHistory(result)
 
 	r.JSON(http.StatusOK, result)
 }

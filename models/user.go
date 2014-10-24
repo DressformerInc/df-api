@@ -9,11 +9,11 @@ import (
 const H_LEN = 10
 
 type UserScheme struct {
-	Id      string           `gorethink:"id,omitempty"      json:"-"`
-	Token   string           `gorethink:"token,omitempty"   json:"-"`
-	Dummy   *DummyScheme     `json:"dummy,omitempty"`
-	Name    string           `gorethink:"name,omitempty"    json:"name,omitempty"`
-	History []*GarmentScheme `gorethink:"history,omitempty" json:"history,omitempty"`
+	Id      string          `gorethink:"id,omitempty"      json:"-"`
+	Token   string          `gorethink:"token,omitempty"   json:"-"`
+	Dummy   *DummyScheme    `json:"dummy,omitempty"`
+	Name    string          `gorethink:"name,omitempty"    json:"name,omitempty"`
+	History []GarmentScheme `gorethink:"history,omitempty" json:"history,omitempty"`
 }
 
 type User struct {
@@ -80,7 +80,6 @@ func (this *User) Find(args ...interface{}) *UserScheme {
 	switch i.(type) {
 	case Token:
 		token := i.(Token).Get()
-		log.Println("find by token, ", token)
 
 		rows, err := this.GetAllByIndex("token", token).Run(session())
 		if err != nil {
@@ -94,21 +93,37 @@ func (this *User) Find(args ...interface{}) *UserScheme {
 		}
 	}
 
-	log.Println("result:", user)
-
 	return user
 }
 
-func (this *User) UpdateHistory(g *GarmentScheme) {
-	history := []*GarmentScheme{}
+// @todo rewrite [that.unredable.stuff]
+//
+func (this *User) UpdateHistory(g interface{}) {
+	history := []GarmentScheme{}
+	ids := map[string]bool{}
 
-	history = append(history, g)
+	switch t := g.(type) {
+	case *GarmentScheme:
+		history = append(history, *g.(*GarmentScheme))
+		ids[g.(*GarmentScheme).Id] = true
+
+	case []GarmentScheme:
+		history = append(history, g.([]GarmentScheme)...)
+		for idx, _ := range g.([]GarmentScheme) {
+			ids[g.([]GarmentScheme)[idx].Id] = true
+		}
+
+	default:
+		log.Println("Wrong type", t)
+		return
+	}
+
 	for i, _ := range this.Object.History {
 		if i == H_LEN-1 {
 			break
 		}
 
-		if this.Object.History[i].Id == g.Id {
+		if _, found := ids[this.Object.History[i].Id]; found {
 			continue
 		}
 
