@@ -53,7 +53,10 @@ func (this *Widget) FindAll(opts models.URLOptionsScheme, u *models.User, g *mod
 		}
 	}
 
-	garments := g.FindAll(ids, opts)
+	garments := []models.GarmentScheme{}
+	if len(ids) > 0 {
+		garments = g.FindAll(ids, opts)
+	}
 
 	r.HTML(http.StatusOK, this.Name, struct {
 		Ids      []string
