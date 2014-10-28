@@ -63,3 +63,14 @@ func (this *Material) Create(u *models.User, payload []models.MaterialScheme, r 
 
 	r.JSON(http.StatusOK, result)
 }
+
+func (this *Material) Put(u *models.User, payload models.MaterialScheme, r render.Render, p martini.Params) {
+
+	result, err := this.model.Put(p["id"], &payload)
+	if err != nil {
+		r.JSON(http.StatusBadRequest, []byte{})
+		return
+	}
+
+	r.JSON(http.StatusOK, result)
+}
