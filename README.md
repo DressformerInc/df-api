@@ -289,7 +289,7 @@ Result:
 ### /materials
 Create and Get materials
 
-__Endpoint:__ `http://v2.dressformer.com//materials`  
+__Endpoint:__ `http://v2.dressformer.com/api/materials`  
 
 
 __Methods:__ 
@@ -354,93 +354,3 @@ PUT /garments/4717c27a-9fb0-4d09-ad70-2ae01f85deeb
 }
 ```
 
-File API
-============================
-
-### /
-_Upload files to asset._
-
-__Endpoint:__ `http://v2.dressformer.com/assets`  
-  
-__Methods:__
-
-- POST
-
-__Expected data:__
-
-- MultiPart Form Data
-
-__Example:__   
-Following `curl` command uploads selected files 
-
-```sh
-curl                                                                                       \
-	-i -XPOST -H "ContentType:multipart/form-data"                                         \
-	-F name=Base.obj                         -F filedata=@Base.obj                         \
-	-F name=Chest_max.obj                    -F filedata=@Chest_max.obj                    \
-	-F name=KPL_201407_0020_0005_diffuse.jpg -F filedata=@KPL_201407_0020_0005_diffuse.jpg \
-	-F name=KPL_201407_0020_0005_normal.jpg  -F filedata=@KPL_201407_0020_0005_normal.jpg  \
-http://v2.dressformer.com/assets/
-```
-and returns
-
-```json
-[
-	{
-		"id"        : "53f622eb0000000000000001",
-		"orig_name" : "Base.obj"
-	},
-	{
-		"id"        : "53f622eb0000000000000002",
-		"orig_name" : "Chest_max.obj"
-	},
-	{
-		"id"        : "53f735c10000000000000001",
-		"orig_name" : "KPL_201407_0020_0005_diffuse.jpg"
-	},
-	{
-		"id"        : "53f735c10000000000000002",
-		"orig_name" : "KPL_201407_0020_0005_normal.jpg"
-	}	
-]	
-```
-
-### /:id
-_Get file from asset. Uniform method for every content types._
-
-__Endpoint:__ `http://v2.dressformer.com/assets`  
-  
-__Methods:__
-
-- GET
-
-__Expected parameters:__
-
-- UUID  
-	- __Accept:__
-		- `application/octet-stream` default for GET method
-		- `application/json` default for POST, PUT, DELETE mothods
-	- __Result:__
-		- `application/octet-stream` 
-		- `application/json`
-	- __Parameters:__
-		- `height`    (float)
-		- `chest`     (float)
-		- `underbust` (float)
-		- `waist`     (float)
-		- `hips`      (float)
-
-- ObjectId  
-	__Parameters:__
-
-	- `scale` Scaling image to dimensions  
-		Prototype: `([0-9]+x) or (x[0-9]+) or ([0-9]+) or (0.[0-9]+)`  
-		E.g.:  
-  			+ `800x` scale to width 800px, height will be calculated  
-		  	+ `x600` scale to height 600px, width will be calculated  
-		  	+ `640`  maximum dimension is 640px, e.g. original 1024x768 pixel image will be scaled
-  		  	   to 640x480, same option applied for 900x1600 image results 360x640  
-		  	+ `0.5`  50% of original dimensions, e.g. 1024x768 = 512x384
-	- `q` 0-100 image quality
-	- `format` Image format — `png` or `jpg`. Jpeg is default one.
-  
