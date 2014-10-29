@@ -180,6 +180,13 @@ func main() {
 		(*ctrl.Material).Find,
 	)
 
+	route.Put("/materials/:id",
+		binding.Json(models.MaterialScheme{}),
+		ErrorHandler,
+		construct(&ctrl.Material{}),
+		(*ctrl.Material).Put,
+	)
+
 	//
 
 	m.Action(route.Handle)
