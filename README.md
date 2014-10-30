@@ -119,7 +119,7 @@ Get, update and delete certain garment.
 ```
 
 ### /user
-__Endpoint:__ `http://v2.dressformer.com/user`  
+__Endpoint:__ `http://v2.dressformer.com/api/user`  
 
 
 __Methods:__ 
