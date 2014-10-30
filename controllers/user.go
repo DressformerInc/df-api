@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"df/api/models"
+	. "df/api/utils"
 	"github.com/martini-contrib/render"
 	"net/http"
 )
@@ -32,6 +33,6 @@ func filter(u *models.UserScheme) {
 	}
 
 	for idx, _ := range u.History {
-		models.Url(&u.History[idx].Assets.Geometry, "geometry")
+		u.History[idx].UrlPrefix = AppConfig.AssetsUrl() + "/"
 	}
 }
