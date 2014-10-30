@@ -58,6 +58,8 @@ func (this *Widget) FindAll(opts models.URLOptionsScheme, u *models.User, g *mod
 		garments = g.FindAll(ids, opts)
 	}
 
+	u.UpdateHistory(garments)
+
 	r.HTML(http.StatusOK, this.Name, struct {
 		Ids      []string
 		User     *models.UserScheme
